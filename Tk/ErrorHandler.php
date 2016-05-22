@@ -1,5 +1,6 @@
 <?php
 namespace Tk;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ErrorHandler
@@ -25,26 +26,27 @@ class ErrorHandler
     static $instance = null;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $log = null;
-    
-    
+
+
     /**
      * constructor.
      *
+     * @param LoggerInterface $log
      */
-    public function __construct(\Psr\Log\LoggerInterface $log = null)
+    public function __construct(LoggerInterface $log = null)
     {
         $this->log = $log;
         set_error_handler(array($this, 'errorHandler'));
     }
 
     /**
-     * @param \Psr\Log\LoggerInterface $log
+     * @param LoggerInterface $log
      * @return ErrorHandler
      */
-    static function getInstance(\Psr\Log\LoggerInterface $log = null)
+    static function getInstance(LoggerInterface $log = null)
     {
         if (static::$instance == null) {
             static::$instance = new static($log);
