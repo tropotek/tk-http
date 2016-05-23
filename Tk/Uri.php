@@ -444,8 +444,6 @@ class Uri implements \Serializable, \IteratorAggregate
      * @link http://edoceo.com/creo/php-redirect.php
      * @param int $code
      * @throws \Exception
-     * 
-     * @todo: maybe this needs to go somewhere else if we are considering the PSR7 standards.
      */
     public function redirect($code = 302)
     {
