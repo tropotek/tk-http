@@ -97,7 +97,12 @@ class Uri implements \Serializable, \IteratorAggregate
     public function __construct($spec = '')
     {
         if (!$spec) {   // Create an auto request uri.
-            $spec = $_SERVER["REQUEST_URI"];
+            if (isset($_SERVER['REQUEST_URI'])) {
+                $spec = $_SERVER['REQUEST_URI'];
+            } else {
+                $spec = '/';
+            }
+            
         }
         
         $spec = trim($spec);

@@ -111,8 +111,12 @@ class Request extends ClientRequest
     public static function create($params = null, $serverParams = null, $uploadedFiles = null)
     {
         $uri = Uri::create();
-        $method = $_SERVER['REQUEST_METHOD'];
-        $headers = new Headers(getallheaders());
+        $method = 'GET';
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            $method = $_SERVER['REQUEST_METHOD'];
+        }
+        
+        $headers = Headers::create();
         
         if ($params === null) {
             $params = $_REQUEST;

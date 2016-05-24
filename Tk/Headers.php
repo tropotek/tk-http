@@ -23,7 +23,33 @@ class Headers extends Collection
         'PHP_AUTH_DIGEST' => 1,
         'AUTH_TYPE' => 1,
     ];
-    
+
+    /**
+     * Creates the headers collection from given array or
+     * from environment if null.
+     * 
+     * @param null $headers
+     * @return Headers
+     */
+    public static function create($headers = null)
+    {
+        if ($headers == null) {
+            $headers = [];
+            if (function_exists('getallheaders')) {
+                $headers = getallheaders();
+            } else {
+                foreach ($_SERVER as $key => $value) {
+                    $key = strtoupper($key);
+                    if (isset(static::$special[$key]) || strpos($key, 'HTTP_') === 0) {
+                        if ($key !== 'HTTP_CONTENT_LENGTH') {
+                            $headers[$key] = $value;
+                        }
+                    }
+                }
+            }
+        }
+        return new static($headers);
+    }
 
     /**
      * Return array of HTTP header names and values.
