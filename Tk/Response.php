@@ -113,6 +113,76 @@ class Response extends Message
         $this->status = $this->filterStatus($status);
         $this->headers = $headers;
     }
+
+
+
+
+    /**
+     * Sends HTTP headers.
+     *
+     * @return Response
+     */
+    public function sendHeaders()
+    {
+        // headers have already been sent by the developer
+        if (headers_sent()) {
+            return $this;
+        }
+
+        // status
+        header(sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), self::$messages[$this->getStatusCode()]), true, $this->getStatusCode());
+
+        // headers
+        foreach ($this->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                header($name.': '.$value, false, $this->getStatusCode());
+            }
+        }
+
+        // cookies ?? Do not think we need this...
+//        foreach ($this->headers->getCookies() as $cookie) {
+//            setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+//        }
+
+        return $this;
+    }
+
+    /**
+     * Sends content for the current web response.
+     *
+     * @return Response
+     */
+    public function sendContent()
+    {
+        echo $this->getBody();
+        return $this;
+    }
+    
+    /**
+     * Sends HTTP headers and content.
+     *
+     * @return Response
+     */
+    public function send()
+    {
+        $this->sendHeaders();
+        $this->sendContent();
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        } 
+//        elseif ('cli' !== PHP_SAPI) {
+//            static::closeOutputBuffers(0, true);
+//        }
+        return $this;
+    }
+    
+    
+    
+    
+    
+    
+    
     
     /**
      * Filter HTTP status code.
@@ -141,6 +211,14 @@ class Response extends Message
     public function getStatusCode()
     {
         return $this->status;
+    }
+
+    /**
+     * @param $status
+     */
+    public function setStatusCode($status)
+    {
+        $this->status = (int)$status;
     }
 
     /**

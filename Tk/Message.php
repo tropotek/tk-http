@@ -18,7 +18,7 @@ class Message
     /**
      * @var Headers
      */
-    protected $headers = array();
+    protected $headers = null;
 
     /**
      * @var string
@@ -202,6 +202,16 @@ class Message
     public function getHeaders() 
     {
         return $this->headers->all();
+    }
+
+    /**
+     * Get the header Collection object.
+     * 
+     * @return Collection
+     */
+    public function getHeaderCollection()
+    {
+        return $this->headers;
     }
     
     /**

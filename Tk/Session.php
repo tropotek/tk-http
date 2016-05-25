@@ -65,9 +65,9 @@ class Session implements \ArrayAccess
         $this->params = $params;
         
         if (!$request)
-            $request = new Request();
+            $request = Request::create();
         if (!$cookie)
-            $cookie = new Cookie('/');
+            $cookie = new Cookie();
         
         $this->request = $request;
         $this->cookie = $cookie;
@@ -114,7 +114,7 @@ class Session implements \ArrayAccess
         // Name the session, this will also be the name of the cookie
         $sesName = $this->getParam('session.name');
 
-        if ($this->getRequest()->exists($sesName) && isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == 'on') {
+        if ($this->getRequest()->has($sesName) && isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == 'on') {
             session_id($this->getRequest()->get($sesName));
         }
         session_name($sesName);
@@ -131,7 +131,7 @@ class Session implements \ArrayAccess
             $_SESSION[self::KEY_DATA] = array(
                 'session_id' => session_id(),
                 'user_agent' => $this->getRequest()->getUserAgent(),
-                'ip_address' => $this->getRequest()->getRemoteAddr(),
+                'ip_address' => $this->getRequest()->getIp(),
                 'site_referer' => $this->getRequest()->getReferer(),
                 'total_hits' => 0,
                 'last_activity' => 0
