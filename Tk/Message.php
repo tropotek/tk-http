@@ -75,20 +75,6 @@ class Message
     }
     
     /**
-     * Is this an XHR request?
-     *
-     * Note: This method is not part of the PSR-7 standard.
-     *
-     * @return bool
-     */
-    public function isXhr()
-    {
-        return $this->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
-    }
-
-
-
-    /**
      * Set a header in the message
      *
      * @param string $name
@@ -144,10 +130,7 @@ class Message
      */
     public function getHeader($name) 
     {
-        if ($this->hasHeader($name)) {
-            return $this->getHeader($name);
-        }
-        return [];
+        return $this->headers->get($name, []);
     }
 
     /**

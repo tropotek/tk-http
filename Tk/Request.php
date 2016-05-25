@@ -13,7 +13,7 @@ namespace Tk;
  */
 class Request extends ClientRequest
 {
-
+    
     /**
      * Set this if you want to extend the Request's sanitizer method
      * This will be called after the existing sanitizer method is run.

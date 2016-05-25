@@ -99,7 +99,6 @@ class Response extends Message
     
     
     
-    
     /**
      * Create new HTTP response.
      *
@@ -111,10 +110,8 @@ class Response extends Message
     {
         $this->body = $body ? $body : '';
         $this->status = $this->filterStatus($status);
-        $this->headers = $headers;
+        $this->headers = new \Tk\Collection($headers);
     }
-
-
 
 
     /**
@@ -167,13 +164,26 @@ class Response extends Message
     {
         $this->sendHeaders();
         $this->sendContent();
-
+        
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         } 
 //        elseif ('cli' !== PHP_SAPI) {
 //            static::closeOutputBuffers(0, true);
 //        }
+        return $this;
+    }
+    
+    
+    /**
+     * Write data to the response body.
+     *
+     * @param string $data
+     * @return self
+     */
+    public function write($data)
+    {
+        $this->body .= $data;
         return $this;
     }
     
@@ -241,20 +251,6 @@ class Response extends Message
         }
         return static::$messages[$this->status];
     }
-    
-    
-    /**
-     * Write data to the response body.
-     *
-     * @param string $data
-     * @return self
-     */
-    public function write($data)
-    {
-        $this->body .= $data;
-        return $this;
-    }
-    
     
     
     
