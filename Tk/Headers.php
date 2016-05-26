@@ -23,7 +23,8 @@ class Headers extends Collection
         'PHP_AUTH_DIGEST' => 1,
         'AUTH_TYPE' => 1,
     ];
-
+    
+    
     /**
      * Creates the headers collection from given array or
      * from environment if null.
@@ -33,6 +34,7 @@ class Headers extends Collection
      */
     public static function create($headers = null)
     {
+        if ($headers instanceof Headers) return $headers;
         if ($headers == null) {
             $headers = [];
             if (function_exists('getallheaders')) {

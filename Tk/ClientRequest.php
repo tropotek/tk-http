@@ -66,6 +66,7 @@ class ClientRequest extends Message
      */
     public function __construct($uri, $method = 'GET', $body = '')
     {
+        parent::__construct();
         $this->setUri($uri);
         $this->setMethod($method);
         $this->setBody($body);

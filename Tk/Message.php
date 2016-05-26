@@ -24,8 +24,17 @@ class Message
      * @var string
      */
     protected $body = '';
-    
-    
+
+
+    /**
+     * Message constructor.
+     *
+     * @param array $headers
+     */
+    public function __construct($headers = [])
+    {
+        $this->headers = Headers::create($headers);
+    }
 
     /**
      * Get request content length, if known.

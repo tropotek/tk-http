@@ -74,7 +74,7 @@ class Request extends ClientRequest
     public function __construct($uri, $method = 'GET', $headers = [], $params = [], $serverParams = [], $cookies = [], $uploadedFiles = [], $body = '')
     {
         parent::__construct($uri, $method, $body);
-        $this->headers = $headers;
+        $this->headers = Headers::create($headers);
         $this->params = $params;
         $this->serverParams = $serverParams;
         $this->cookies = $cookies;

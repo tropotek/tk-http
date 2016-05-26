@@ -108,9 +108,9 @@ class Response extends Message
      */
     public function __construct($body = null, $status = 200, $headers = [])
     {
+        parent::__construct($headers);
         $this->body = $body ? $body : '';
         $this->status = $this->filterStatus($status);
-        $this->headers = new \Tk\Collection($headers);
     }
 
 
