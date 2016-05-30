@@ -94,15 +94,13 @@ class Uri implements \Serializable, \IteratorAggregate
      * @param string $spec The String to parse as a URL
      * @throws Exception
      */
-    public function __construct($spec = '')
+    public function __construct($spec = null)
     {
-        if (!$spec) {   // Create an auto request uri.
+        if ($spec === null) {   // Create an auto request uri.
+            $spec = '/';
             if (isset($_SERVER['REQUEST_URI'])) {
                 $spec = $_SERVER['REQUEST_URI'];
-            } else {
-                $spec = '/';
             }
-            
         }
         
         $spec = trim($spec);
@@ -272,19 +270,6 @@ class Uri implements \Serializable, \IteratorAggregate
     }
 
     /**
-     * If the $BASE_URL is set the path is returned with the $BASE_URL removed.
-     * 
-     * @return mixed|string
-     */
-    public function getRelativePath()
-    {
-        $path = $this->getPath();
-        $buri = parse_url(self::$BASE_URL_PATH);
-        $path = str_replace($buri['path'], '', $path);
-        return $path;
-    }
-
-    /**
      * Returns file extension for this pathname.
      *
      * A the last period ('.') in the pathname is used to delimit the file
@@ -315,11 +300,10 @@ class Uri implements \Serializable, \IteratorAggregate
      * clear and reset the query string
      *
      * @return Uri
-     * @deprecated use withQuery()
      */
     public function reset()
     {
-        return $this->withQuery('');
+        return $this->query = array();
     }
 
     /**
@@ -763,6 +747,19 @@ class Uri implements \Serializable, \IteratorAggregate
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * If the $BASE_URL is set the path is returned with the $BASE_URL removed.
+     * 
+     * @return mixed|string
+     */
+    public function getRelativePath()
+    {
+        $path = $this->getPath();
+        $buri = parse_url(self::$BASE_URL_PATH);
+        $path = str_replace($buri['path'], '', $path);
+        return $path;
     }
 
     /**
