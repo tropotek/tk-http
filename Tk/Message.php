@@ -121,7 +121,8 @@ class Message
      */
     public function hasHeader($name) 
     {
-        return $this->headers->has($name);    }
+        return $this->headers->has($name);    
+    }
 
     /**
      * Retrieves a message header value by the given case-insensitive name.

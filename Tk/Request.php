@@ -413,6 +413,18 @@ class Request extends ClientRequest
     {
         return isset($this->attributes[$name]);
     }
+
+    /**
+     * Add a list of items to the attribute array
+     *
+     * @param array $items Key-value array of data to append to this collection
+     */
+    public function replaceAttribute(array $items)
+    {
+        foreach ($items as $key => $value) {
+            $this->setAttribute($key, $value);
+        }
+    }
     
     
     /**

@@ -35,7 +35,7 @@ class Headers extends Collection
     public static function create($headers = null)
     {
         if ($headers instanceof Headers) return $headers;
-        if ($headers == null) {
+        if (!is_array($headers)) {
             $headers = [];
             if (function_exists('getallheaders')) {
                 $headers = getallheaders();
