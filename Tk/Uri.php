@@ -105,7 +105,7 @@ class Uri implements \Serializable, \IteratorAggregate
         
         $spec = trim($spec);
         if ($spec && self::$BASE_URL_PATH) {
-            // TODO: not checked `domain.com/path/path`, need to create a regex for this one day;
+            // TODO: not checked `domain.com/path/path`, need to create a regex for this
             // See unit test for more examples...
             $p = parse_url($spec);
             if (!preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
@@ -133,7 +133,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * @param $spec
      * @return Uri
      */
-    public static function create($spec = '')
+    public static function create($spec = null)
     {
         if ($spec instanceof Uri)
             return $spec;
@@ -144,8 +144,7 @@ class Uri implements \Serializable, \IteratorAggregate
     {
         return serialize(array('spec' => $this->spec));
     }
-
-
+    
     public function unserialize($data)
     {
         $arr = unserialize($data);
@@ -154,7 +153,7 @@ class Uri implements \Serializable, \IteratorAggregate
     }
 
     /**
-     * Initalise the uri object
+     * Initialise the uri object
      */
     private function init()
     {
@@ -189,39 +188,31 @@ class Uri implements \Serializable, \IteratorAggregate
         $components = parse_url($spec);
         if ($components) {
             if (array_key_exists('scheme', $components)) {
-                $this->scheme = $components['scheme'];
-                //$this->setScheme($components['scheme']);
+                $this->setScheme($components['scheme']);
             }
             if (array_key_exists('host', $components)) {
-                $this->host = $components['host'];
-                //$this->setHost($components['host']);
+                $this->setHost($components['host']);
             }
             if (array_key_exists('port', $components)) {
-                $this->port = $components['port'];
-                //$this->setPort($components['port']);
+                $this->setPort($components['port']);
             } else if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $this->getHost() == $host) {
-                $this->port = $_SERVER['SERVER_PORT'];
-                //$this->setPort($_SERVER['SERVER_PORT']);
+                $this->setPort($_SERVER['SERVER_PORT']);
             }
             if (array_key_exists('user', $components)) {
-                $this->username = $components['user'];
-                //$this->setUser($components['user']);
+                $this->setUsername($components['user']);
             }
             if (array_key_exists('pass', $components)) {
-                $this->password = $components['pass'];
-                //$this->setPassword($components['pass']);
+                $this->setPassword($components['pass']);
             }
             if (array_key_exists('path', $components)) {
-                $this->path = $components['path'];
-                //$this->setPath($components['path']);
+                $this->setPath($components['path']);
             }
             if (array_key_exists('query', $components)) {
                 $components['query'] = html_entity_decode($components['query']);
                 parse_str($components['query'], $this->query);
             }
             if (array_key_exists('fragment', $components)) {
-                $this->fragment = $components['fragment'];
-                //$this->setFragment($components['fragment']);
+                $this->setFragment($components['fragment']);
             }
         }
     }
@@ -315,12 +306,11 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function set($field, $value = null)
     {
-        $uri = clone $this;
         if ($value === null) {
             $value = $field;
         }
-        $uri->query[$field] = $value;
-        return $uri;
+        $this->query[$field] = $value;
+        return $this;
     }
 
     /**
@@ -356,11 +346,10 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function delete($field)
     {
-        $uri = clone $this;
-        if ($uri->has($field)) {
-            unset($uri->query[$field]);
+        if ($this->has($field)) {
+            unset($this->query[$field]);
         }
-        return $uri;
+        return $this;
     }
 
     /**
@@ -372,110 +361,6 @@ class Uri implements \Serializable, \IteratorAggregate
     {
         return new \ArrayIterator($this->query);
     }
-    
-    /**
-     * Redirect Codes:
-     *
-     * <code>
-     *  301: Moved Permanently
-     *
-     *    - The requested resource has been assigned a new permanent URI and any
-     *      future references to this resource SHOULD use one of the returned URIs.
-     *      Clients with link editing capabilities ought to automatically re-link
-     *      references to the Request-URI to one or more of the new references
-     *      returned by the server, where possible. This response is cacheable
-     *      unless indicated otherwise.
-     *
-     *  302: Found
-     *
-     *    - The requested resource resides temporarily under a different URI. Since
-     *      the redirection might be altered on occasion, the client SHOULD continue to
-     *      use the Request-URI for future requests. This response is only cacheable
-     *      if indicated by a Cache-Control or Expires header field.
-     *
-     *  303: See Other
-     *
-     *    - The response to the request can be found under a different URI and SHOULD
-     *      be retrieved using a GET method on that resource. This method exists primarily
-     *      to allow the output of a POST-activated script to redirect the user agent
-     *      to a selected resource. The new URI is not a substitute reference for
-     *      the originally requested resource. The 303 response MUST NOT be cached,
-     *      but the response to the second (redirected) request might be cacheable.
-     *
-     *  304: Not Modified
-     *
-     *    - If the client has performed a conditional GET request and access is allowed,
-     *      but the document has not been modified, the server SHOULD respond with this
-     *      status code. The 304 response MUST NOT contain a message-body, and thus is
-     *      always terminated by the first empty line after the header fields.
-     *
-     *  305: Use Proxy
-     *
-     *    - The requested resource MUST be accessed through the proxy given by the Location
-     *      field. The Location field gives the URI of the proxy. The recipient is expected
-     *      to repeat this single request via the proxy. 305 responses MUST only be
-     *      generated by origin servers.
-     *
-     *  306: (Unused)
-     *
-     *    - The 306 status code was used in a previous version of the specification, is
-     *      no longer used, and the code is reserved.
-     *
-     *  307: Temporary Redirect
-     *
-     *    - The requested resource resides temporarily under a different URI. Since the
-     *      redirection MAY be altered on occasion, the client SHOULD continue to use the
-     *      Request-URI for future requests. This response is only cacheable if indicated
-     *      by a Cache-Control or Expires header field.
-     * </code>
-     *
-     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-     * @link http://edoceo.com/creo/php-redirect.php
-     * @param int $code
-     * @throws \Exception
-     */
-    public function redirect($code = 302)
-    {
-        if (headers_sent()) {
-            throw new \Exception('Invalid URL Redirect, Headers Allready Sent.');
-        }
-        switch ($code) {
-            case 301:
-                // Convert to GET
-                header('301: Moved Permanently HTTP/1.1', true, $code);
-                break;
-            case 302:
-                // Conform re-POST
-                header('302: Found HTTP/1.1', true, $code);
-                break;
-            case 303:
-                // dont cache, always use GET
-                header('303: See Other HTTP/1.1', true, $code);
-                break;
-            case 304:
-                // use cache
-                header('304: Not Modified HTTP/1.1', true, $code);
-                break;
-            case 305:
-                header('305: Use Proxy HTTP/1.1', true, $code);
-                break;
-            case 306:
-                header('306: Not Used HTTP/1.1', true, $code);
-                break;
-            case 307:
-                header('307: Temporary Redirect HTTP/1.1', true, $code);
-                break;
-        }
-
-        $arr = debug_backtrace();
-        $arr = $arr[0];
-        error_log('- ' . $code . ' REDIRECT ['.$this->toString().'] Called from ' . basename($arr['file']) . '[' . $arr['line'] . '] '."\n");
-
-        header("Location: {$this->toString()}");
-        exit();
-    }
-    
-    
 
     /**
      * Set the fragment portion of the uri
@@ -782,7 +667,6 @@ class Uri implements \Serializable, \IteratorAggregate
         return $this->port;
     }
     
-
     /**
      * Return a string representation of this object
      *
@@ -804,7 +688,6 @@ class Uri implements \Serializable, \IteratorAggregate
             } else {
                 $uri .= '//';
             }
-
             $uri .= $this->getAuthority();
         }
         if ($this->getPath() != '') {
@@ -820,7 +703,108 @@ class Uri implements \Serializable, \IteratorAggregate
         return $uri;
     }
 
-    
+
+    /**
+     * Redirect Codes:
+     *
+     * <code>
+     *  301: Moved Permanently
+     *
+     *    - The requested resource has been assigned a new permanent URI and any
+     *      future references to this resource SHOULD use one of the returned URIs.
+     *      Clients with link editing capabilities ought to automatically re-link
+     *      references to the Request-URI to one or more of the new references
+     *      returned by the server, where possible. This response is cacheable
+     *      unless indicated otherwise.
+     *
+     *  302: Found
+     *
+     *    - The requested resource resides temporarily under a different URI. Since
+     *      the redirection might be altered on occasion, the client SHOULD continue to
+     *      use the Request-URI for future requests. This response is only cacheable
+     *      if indicated by a Cache-Control or Expires header field.
+     *
+     *  303: See Other
+     *
+     *    - The response to the request can be found under a different URI and SHOULD
+     *      be retrieved using a GET method on that resource. This method exists primarily
+     *      to allow the output of a POST-activated script to redirect the user agent
+     *      to a selected resource. The new URI is not a substitute reference for
+     *      the originally requested resource. The 303 response MUST NOT be cached,
+     *      but the response to the second (redirected) request might be cacheable.
+     *
+     *  304: Not Modified
+     *
+     *    - If the client has performed a conditional GET request and access is allowed,
+     *      but the document has not been modified, the server SHOULD respond with this
+     *      status code. The 304 response MUST NOT contain a message-body, and thus is
+     *      always terminated by the first empty line after the header fields.
+     *
+     *  305: Use Proxy
+     *
+     *    - The requested resource MUST be accessed through the proxy given by the Location
+     *      field. The Location field gives the URI of the proxy. The recipient is expected
+     *      to repeat this single request via the proxy. 305 responses MUST only be
+     *      generated by origin servers.
+     *
+     *  306: (Unused)
+     *
+     *    - The 306 status code was used in a previous version of the specification, is
+     *      no longer used, and the code is reserved.
+     *
+     *  307: Temporary Redirect
+     *
+     *    - The requested resource resides temporarily under a different URI. Since the
+     *      redirection MAY be altered on occasion, the client SHOULD continue to use the
+     *      Request-URI for future requests. This response is only cacheable if indicated
+     *      by a Cache-Control or Expires header field.
+     * </code>
+     *
+     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+     * @link http://edoceo.com/creo/php-redirect.php
+     * @param int $code
+     * @throws \Exception
+     */
+    public function redirect($code = 302)
+    {
+        if (headers_sent()) {
+            throw new \Exception('Invalid URL Redirect, Headers Allready Sent.');
+        }
+        switch ($code) {
+            case 301:
+                // Convert to GET
+                header('301: Moved Permanently HTTP/1.1', true, $code);
+                break;
+            case 302:
+                // Conform re-POST
+                header('302: Found HTTP/1.1', true, $code);
+                break;
+            case 303:
+                // dont cache, always use GET
+                header('303: See Other HTTP/1.1', true, $code);
+                break;
+            case 304:
+                // use cache
+                header('304: Not Modified HTTP/1.1', true, $code);
+                break;
+            case 305:
+                header('305: Use Proxy HTTP/1.1', true, $code);
+                break;
+            case 306:
+                header('306: Not Used HTTP/1.1', true, $code);
+                break;
+            case 307:
+                header('307: Temporary Redirect HTTP/1.1', true, $code);
+                break;
+        }
+
+        $arr = debug_backtrace();
+        $arr = $arr[0];
+        error_log('- ' . $code . ' REDIRECT ['.$this->toString().'] Called from ' . basename($arr['file']) . '[' . $arr['line'] . '] '."\n");
+
+        header("Location: {$this->toString()}");
+        exit();
+    }
     
     /**
      * Return the string representation as a URI reference.
