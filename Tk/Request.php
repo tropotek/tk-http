@@ -3,15 +3,20 @@ namespace Tk;
 
 /**
  * This is a rewritten Tk\Request object with the PSR7 interfaces taken into consideration,
- * however we wil need to extend these objects to make them completely PSR7 compatible.
+ * However you will need to extend these objects to make them completely PSR7 compatible.
  * 
- * I am not 100% sure that our libs currently needs to support PSR7 is its entirety.
+ * The object uses the \ArrayAccess interface so that the request object can be used like the $_REQUEST array
+ * in situations that do not have the Tk\Request object.
+ * 
+ * 
+ * @thought: I am not 100% sure that our libs currently needs to support PSR7 is its entirety.
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Request extends ClientRequest
+class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate, \Countable
+//class Request extends ClientRequest implements \ArrayAccess, \Countable
 {
     
     /**
@@ -553,6 +558,84 @@ class Request extends ClientRequest
     public function getRawPostData()
     {
         return file_get_contents("php://input");
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Does this collection have a given key?
+     *
+     * @param  string $key The data key
+     *
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return $this->has($key);
+    }
+
+    /**
+     * Get collection item for key
+     *
+     * @param string $key The data key
+     *
+     * @return mixed The key's value, or the default value
+     */
+    public function offsetGet($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Set collection item
+     *
+     * @param string $key   The data key
+     * @param mixed  $value The data value
+     * @todo This should not be allowed technically
+     */
+    public function offsetSet($key, $value)
+    {
+        throw new Exception('Data is read only, use attributes array.');
+        //$this->params[$key] = $value;
+    }
+
+    /**
+     * Remove item from collection
+     *
+     * @param string $key The data key
+     * @todo This should not be allowed technically
+     */
+    public function offsetUnset($key)
+    {
+        throw new Exception('Data is read only, use attributes array.');
+        //unset($this->params[$key]);
+    }
+
+    /**
+     * Get number of items in collection
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->params);
+    }
+
+    /**
+     * Get collection iterator
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->params);
     }
     
 }

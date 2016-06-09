@@ -240,6 +240,36 @@ class Session implements \ArrayAccess
             session_write_close();
         }
     }
+    
+    /**
+     * looks for the $key in the params object,
+     * if not found then prepends 'session.' to the key
+     *
+     * return null if not found.
+     *
+     * @param $key
+     * @param string $default
+     * @return null|string
+     */
+    protected function getParam($key, $default = '')
+    {
+        if (!preg_match('/^session\./i', $key)) {
+            $key = 'session.'.$key;
+        }
+        if (isset($this->params[$key]))
+            return $this->params[$key];
+        return $default;
+    }
+
+    /**
+     * Get the session param config list
+     * 
+     * @return array|\ArrayAccess
+     */
+    public function getParamList()
+    {
+        return $this->params;
+    }
 
     /**
      * Get the session id.
@@ -262,25 +292,6 @@ class Session implements \ArrayAccess
     }
 
     /**
-     * Binds data to this session, using the name specified.
-     *
-     * @param string $key A key to retrieve the data
-     * @param mixed $value
-     * @return $this
-     * @throws \Tk\Exception
-     */
-    public function set($key, $value = null)
-    {
-        if ($key == self::KEY_DATA) return $this;
-        if ($value === null) {
-            $this->delete($key);
-        } else {
-            $_SESSION[$key] = $value;
-        }
-        return $this;
-    }
-
-    /**
      * @return Cookie
      */
     public function getCookie()
@@ -295,10 +306,24 @@ class Session implements \ArrayAccess
     {
         return $this->request;
     }
-    
-    
-    
-    
+
+    /**
+     * Binds data to this session, using the name specified.
+     *
+     * @param string $key A key to retrieve the data
+     * @param mixed $value
+     * @return $this
+     */
+    public function set($key, $value = null)
+    {
+        if ($key == self::KEY_DATA) return $this;
+        if ($value === null) {
+            $this->delete($key);
+        } else {
+            $_SESSION[$key] = $value;
+        }
+        return $this;
+    }
 
     /**
      * Returns the data bound with the specified name in this session,
@@ -359,44 +384,12 @@ class Session implements \ArrayAccess
      * @param string $key
      * @return bool
      */
-    public function exists($key)
+    public function has($key)
     {
         return isset($_SESSION[$key]);
     }
     
-    /**
-     * looks for the $key in the params object,
-     * if not found then prepends 'session.' to the key
-     *
-     * return null if not found.
-     *
-     * @param $key
-     * @param string $default
-     * @return null|string
-     */
-    protected function getParam($key, $default = '')
-    {
-        if (!preg_match('/^session\./i', $key)) {
-            $key = 'session.'.$key;
-        }
-        if (isset($this->params[$key]))
-            return $this->params[$key];
-        return $default;
-    }
-
-    /**
-     * Get the session param config list
-     * 
-     * @return array|\ArrayAccess
-     */
-    public function getParamList()
-    {
-        return $this->params;
-    }
     
-    
-    
-
     /**
      * Whether a offset exists
      *
@@ -412,7 +405,7 @@ class Session implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return $this->exists($offset);
+        return $this->has($offset);
     }
 
     /**
