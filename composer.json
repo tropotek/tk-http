@@ -16,10 +16,7 @@
     "autoload": {
         "psr-0": {
             "Tk\\": ""
-        },
-        "files": [
-            "bootstrap.php"
-        ]
+        }
     },
     
     "require": {
