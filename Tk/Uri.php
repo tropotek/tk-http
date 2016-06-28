@@ -835,3 +835,12 @@ class Uri implements \Serializable, \IteratorAggregate
     }
     
 }
+
+/**
+ * Class Url
+ *
+ * @author Michael Mifsud <info@tropotek.com>
+ * @link http://www.tropotek.com/
+ * @license Copyright 2016 Michael Mifsud
+ */
+class Url extends Uri {}
