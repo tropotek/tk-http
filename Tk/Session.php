@@ -100,13 +100,14 @@ class Session implements \ArrayAccess
 
         $this->start();
 
-        if ($this->getParam('session.regenerate') > 0 && ($this['_total_hits'] % (int)$this->getParam('session.regenerate')) === 0) {
+        if ($this->getParam('session.regenerate') > 0 && ($this->getData('total_hits') % (int)$this->getParam('session.regenerate')) === 0) {
             // Regenerate session id and update session cookie
             $this->regenerate();
-            vd();
+            vd('');
         } else {
             // Always update session cookie to keep the session alive
             $this->getCookie()->set($this->getParam('session.name'), $this->getData('session_id'), time() + (int)$this->getParam('session.gc_maxlifetime'));
+            vd();
         }
 
         // Make sure that sessions are closed before exiting
@@ -336,7 +337,7 @@ class Session implements \ArrayAccess
      */
     public function getId()
     {
-        return $this[self::KEY_DATA]['session_id'];
+        return session_id();
     }
 
     /**
