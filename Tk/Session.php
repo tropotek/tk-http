@@ -38,6 +38,11 @@ class Session implements \ArrayAccess
     protected $params = array();
 
     /**
+     * @var array
+     */
+    protected $data = array();
+
+    /**
      * @var Request
      */
     protected $request = null;
@@ -155,7 +160,7 @@ class Session implements \ArrayAccess
 
         // Start the session!
         session_start();
-        
+
         $this->started = true;
 
         // reset the session cookie expiration
@@ -163,8 +168,8 @@ class Session implements \ArrayAccess
             $this->getCookie()->set($sesName, $this->getRequest()->get($sesName), time() + (int)$this->getParam('session.expiration'));
         }
 
-        if(!isset($this[self::KEY_DATA])) {
-            $this[self::KEY_DATA] = array(
+        if(!$this->has(self::KEY_DATA)) {
+            $this->data = array(
                 'session_id' => session_id(),
                 'user_agent' => $this->getRequest()->getUserAgent(),
                 'ip_address' => $this->getRequest()->getIp(),
@@ -172,33 +177,35 @@ class Session implements \ArrayAccess
                 'total_hits' => 0,
                 'last_activity' => 0
             );
+            $this->set(self::KEY_DATA, $this->data);
         }
 
         // Increase total hits
-        $this[self::KEY_DATA]['total_hits'] += 1;
+        $hits = (int)$this->getData('total_hits') + 1;
+        $this->setData('total_hits', $hits);
 
         // Validate data only on hits after one
-        if ($this[self::KEY_DATA]['total_hits'] > 1) {
+        if ($hits > 1) {
             // Validate the session, regenerate if not valid.
             foreach ($this->getParam('session.validate') as $valid) {
                 switch ($valid) {
                     case 'user_agent' :
-                        if ($this[self::KEY_DATA][$valid] !== $this->getRequest()->getUserAgent())
+                        if ($this->getData($valid) !== $this->getRequest()->getUserAgent())
                             return $this->start();
                         break;
                     case 'ip_address' :
-                        if ($this[self::KEY_DATA][$valid] !== $this->getRequest()->getRemoteAddr())
+                        if ($this->getData($valid) !== $this->getRequest()->getIp())
                             return $this->start();
                         break;
                     case 'expiration' :
-                        if (time() - $this[self::KEY_DATA]['last_activity'] > ini_get('session.gc_maxlifetime'))
+                        if (time() - $this->getData('last_activity') > ini_get('session.gc_maxlifetime'))
                             return $this->start();
                         break;
                 }
             }
         }
         // Update last activity
-        $this[self::KEY_DATA]['last_activity'] = time();
+        $this->setData('last_activity', time());
 
         
         return $this;
@@ -213,19 +220,18 @@ class Session implements \ArrayAccess
         // TODO: we are using the adapter regenerate() function here could we add a callback 'create_id()' to the adapters to do this automatically?
         if ($this->adapter) {
             // Pass the regenerating off to the driver in case it wants to do anything special
-            $this[self::KEY_DATA]['session_id'] = $this->adapter->regenerate();
+            $this->setData('session_id', $this->adapter->regenerate());
         } else {
             // Generate a new session id
             // Note: also sets a new session cookie with the updated id
             session_regenerate_id(true);
             // Update session with new id
-            $this[self::KEY_DATA]['session_id'] = session_id();
+            $this->setData('session_id', session_id());
         }
         // Get the session name
         $name = session_name();
         if ($this->getCookie()->exists($name)) {    // Change the cookie value to match the new session id to prevent "lag"
-            $this->getCookie()->set($name, $this[self::KEY_DATA]['session_id']);
-            //$_COOKIE[$name] = $this[self::KEY_DATA]['session_id'];
+            $this->getCookie()->set($name, $this->getData('session_id'));
         }
         return $this;
     }
@@ -262,6 +268,31 @@ class Session implements \ArrayAccess
             // Close the session
             session_write_close();
         }
+    }
+
+    /**
+     * @param $key
+     * @return mixed|string
+     */
+    public function getData($key)
+    {
+        if (isset($this->data[$key]))
+            return $this->data[$key];
+        return '';
+    }
+
+    /**
+     *
+     *
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function setData($key, $value)
+    {
+        $this->data[$key] = $value;
+        $this->set(self::KEY_DATA, $this->data);
+        return $this;
     }
     
     /**
