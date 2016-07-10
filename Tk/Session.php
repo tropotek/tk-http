@@ -106,7 +106,7 @@ class Session implements \ArrayAccess
             vd();
         } else {
             // Always update session cookie to keep the session alive
-            $this->getCookie()->set($this->getParam('session.name'), $this->getData('_session_id'), time() + (int)$this->getParam('session.gc_maxlifetime'));
+            $this->getCookie()->set($this->getParam('session.name'), $this->getData('session_id'), time() + (int)$this->getParam('session.gc_maxlifetime'));
         }
 
         // Make sure that sessions are closed before exiting
