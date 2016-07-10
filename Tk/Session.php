@@ -103,9 +103,10 @@ class Session implements \ArrayAccess
         if ($this->getParam('session.regenerate') > 0 && ($this['_total_hits'] % (int)$this->getParam('session.regenerate')) === 0) {
             // Regenerate session id and update session cookie
             $this->regenerate();
+            vd();
         } else {
             // Always update session cookie to keep the session alive
-            $this->getCookie()->set($this->getParam('session.name'), $this['_session_id'], time() + (int)$this->getParam('session.gc_maxlifetime'));
+            $this->getCookie()->set($this->getParam('session.name'), $this->getData('_session_id'), time() + (int)$this->getParam('session.gc_maxlifetime'));
         }
 
         // Make sure that sessions are closed before exiting
