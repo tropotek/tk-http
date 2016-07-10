@@ -94,6 +94,8 @@ class Session implements \ArrayAccess
             ini_set('session.gc_divisor', (int)$this->getParam('session.gc_divisor'));
         if ($this->getParam('session.expiration'))
             ini_set('session.gc_maxlifetime', (int)$this->getParam('session.gc_maxlifetime'));
+        
+
 
         $this->start();
 
