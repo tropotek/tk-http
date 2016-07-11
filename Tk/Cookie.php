@@ -90,7 +90,7 @@ class Cookie implements \ArrayAccess
      * @param string $key
      * @return bool
      */
-    public function exists($key)
+    public function has($key)
     {
         return isset($_COOKIE[$key]);
     }
@@ -161,7 +161,7 @@ class Cookie implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return $this->exists($offset);
+        return $this->has($offset);
     }
 
     /**

@@ -66,12 +66,13 @@ class Session implements \ArrayAccess
      *   'session.validate' => 'user_agent',    // Session parameters to validate: user_agent, ip_address, expiration.
      * )
      *
+     * @param null $adapter
      * @param array|\ArrayAccess $params
      * @param Request $request
      * @param Cookie $cookie
      * @throws Exception
      */
-    public function __construct($params = array(), $adapter = null, $request = null, $cookie = null)
+    public function __construct($adapter = null, $params = array(), $request = null, $cookie = null)
     {
         $this->params = $params;
         
@@ -116,16 +117,16 @@ class Session implements \ArrayAccess
     /**
      * Get an instance of this object
      *
-     * @param array $params
      * @param null $adapter
      * @param null $request
      * @param null $cookie
+     * @param array $params
      * @return Session
      */
-    static function getInstance($params = array(), $adapter = null, $request = null, $cookie = null)
+    static function getInstance($adapter = null, $params = array(), $request = null, $cookie = null)
     {
         if (self::$instance == null) {
-            self::$instance = new static($params, $adapter, $request, $cookie);
+            self::$instance = new static($adapter, $params, $request, $cookie);
         }
         return self::$instance;
     }
@@ -167,7 +168,7 @@ class Session implements \ArrayAccess
         $this->started = true;
 
         // reset the session cookie expiration
-        if ($this->getCookie()->exists($sesName)) {
+        if ($this->getCookie()->has($sesName)) {
             $this->getCookie()->set($sesName, $this->getRequest()->get($sesName), time() + (int)$this->getParam('session.expiration'));
         }
 
@@ -233,7 +234,7 @@ class Session implements \ArrayAccess
         }
         // Get the session name
         $name = session_name();
-        if ($this->getCookie()->exists($name)) {    // Change the cookie value to match the new session id to prevent "lag"
+        if ($this->getCookie()->has($name)) {    // Change the cookie value to match the new session id to prevent "lag"
             $this->getCookie()->set($name, $this->getData('session_id'));
         }
         return $this;
