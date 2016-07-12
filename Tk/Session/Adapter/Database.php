@@ -68,8 +68,9 @@ class Database implements Iface
      */
     private function installDb()
     {
+        $tbl = $this->db->quoteParameter($this->table);
         $sql = <<<SQL
-CREATE TABLE session (
+CREATE TABLE $tbl (
   session_id VARCHAR(127) NOT NULL PRIMARY KEY,
   data TEXT NOT NULL,
   modified TIMESTAMP NOT NULL,
