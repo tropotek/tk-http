@@ -47,50 +47,59 @@ class Database implements Iface
      *
      * @param \Tk\Db\Pdo $db
      * @param string $table
-     * @param bool $encrypt
+     * @param \Tk\Encrypt $encrypt
      */
-    public function __construct(\Tk\Db\Pdo $db, $table = 'session', $encrypt = false)
+    public function __construct(\Tk\Db\Pdo $db, $table = 'session', $encrypt = null)
     {
         $this->db = $db;
         $this->table = $table;
         $this->encrypt = $encrypt;
+
+        // TODO: Auto install db table if not exists....
+        if (!$this->db->tableExists($table)) {
+            $this->installDb();
+        }
     }
 
-
     /**
-     * Open the session
+     * This sql should be DB generic (tested on: mysql, pgsql)
      *
-     * @param string $path
-     * @param string $name
-     * @return bool
+     * @throws \Tk\Db\Exception
      */
-    public function open($path, $name)
+    private function installDb()
     {
-        return true;
+        $sql = <<<SQL
+CREATE TABLE session (
+  session_id VARCHAR(127) NOT NULL PRIMARY KEY,
+  data TEXT NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  created TIMESTAMP NOT NULL
+);
+SQL;
+        $this->db->exec($sql);
     }
 
-    /**
-     * close
-     *
-     * @return bool
-     */
-    public function close()
+
+    protected function encode($str)
     {
-        return true;
+        if ($this->encrypt) {
+            $str = $this->encrypt->encode($str);
+        } else {
+            $str = base64_encode($str);
+        }
+        return $str;
     }
 
-    /**
-     * Use this to put creation in one place.
-     * 
-     * 
-     * @param string $time
-     * @param null $timezone
-     * @return \DateTime
-     */
-    private function createDate($time = 'now', $timezone = null)
+    protected function decode($str)
     {
-        return \Tk\Date::create($time, $timezone);
+        if ($this->encrypt) {
+            $str = $this->encrypt->decode($str);
+        } else {
+            $str = base64_decode($str);
+        }
+        return $str;
     }
+
 
     /**
      * read
@@ -112,7 +121,7 @@ class Database implements Iface
         $this->sessionId = $id;
         // Load the data
         $data = $row->data;
-        return ($this->encrypt) ? base64_decode($data) : \Tk\Encrypt::decode($data);
+        return $this->decode($data);
     }
 
     /**
@@ -124,7 +133,7 @@ class Database implements Iface
      */
     public function write($id, $data)
     {
-        $data = ($this->encrypt) ? base64_encode($data) : \Tk\Encrypt::encode($data);
+        $data = $this->encode($data);
         if ($this->sessionId === null) {
             // Insert a new session
             $query = sprintf('INSERT INTO %s VALUES (%s, %s, %s, %s)', 
@@ -191,4 +200,40 @@ class Database implements Iface
         return true;
     }
 
+
+
+    /**
+     * Open the session
+     *
+     * @param string $path
+     * @param string $name
+     * @return bool
+     */
+    public function open($path, $name)
+    {
+        return true;
+    }
+
+    /**
+     * close
+     *
+     * @return bool
+     */
+    public function close()
+    {
+        return true;
+    }
+
+    /**
+     * Use this to put creation in one place.
+     *
+     *
+     * @param string $time
+     * @param null $timezone
+     * @return \DateTime
+     */
+    private function createDate($time = 'now', $timezone = null)
+    {
+        return \Tk\Date::create($time, $timezone);
+    }
 }
