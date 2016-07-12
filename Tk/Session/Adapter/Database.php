@@ -6,11 +6,10 @@ namespace Tk\Session\Adapter;
  *
  * <code>
  *    CREATE TABLE session (
- *       session_id VARCHAR(127) NOT NULL,
+ *       session_id VARCHAR(127) NOT NULL PRIMARY KEY,
  *       data TEXT NOT NULL,
  *       modified TIMESTAMP NOT NULL,
- *       created TIMESTAMP NOT NULL,
- *       PRIMARY KEY (session_id)
+ *       created TIMESTAMP NOT NULL
  *   );
  *  </code>
  *
