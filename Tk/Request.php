@@ -31,27 +31,27 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     /**
      * @var array
      */
-    protected $cookies = [];
+    protected $cookies = array();
 
     /**
      * @var array
      */
-    protected $params = [];
+    protected $params = array();
     
     /**
      * @var array
      */
-    protected $serverParams = [];
+    protected $serverParams = array();
 
     /**
      * @var array
      */
-    protected $uploadedFiles = [];
+    protected $uploadedFiles = array();
 
     /**
      * @var array
      */
-    protected $attributes = [];
+    protected $attributes = array();
 
     /**
      * @var null|array|object
@@ -61,7 +61,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     /**
      * @var callable[]
      */
-    protected $bodyParsers = [];
+    protected $bodyParsers = array();
 
 
     /**
@@ -76,7 +76,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * @param array $uploadedFiles Generally this is the $_FILES global
      * @param mixed|string $body The body of the request if available
      */
-    public function __construct($uri, $method = 'GET', $headers = [], $params = [], $serverParams = [], $cookies = [], $uploadedFiles = [], $body = '')
+    public function __construct($uri, $method = 'GET', $headers = array(), $params = array(), $serverParams = array(), $cookies = array(), $uploadedFiles = array(), $body = '')
     {
         parent::__construct($uri, $method, $body);
         $this->headers = Headers::create($headers);
@@ -134,7 +134,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
         $cookies = $_COOKIE;
         
         if ($uploadedFiles === null) {
-            $uploadedFiles = [];
+            $uploadedFiles = array();
             if (!empty($_FILES)) {
                 $uploadedFiles = UploadedFile::parseUploadedFiles($_FILES);
             }
@@ -187,7 +187,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     private function cleanData($str)
     {
         if (is_array($str)) {
-            $new_array = [];
+            $new_array = array();
             foreach ($str as $key => $val) {
                 $new_array[$this->cleanKey($key)] = $this->cleanData($val);
             }

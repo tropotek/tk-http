@@ -36,7 +36,7 @@ class Headers extends Collection
     {
         if ($headers instanceof Headers) return $headers;
         if (!is_array($headers)) {
-            $headers = [];
+            $headers = array();
             if (function_exists('getallheaders')) {
                 $headers = getallheaders();
             } else {
@@ -63,7 +63,7 @@ class Headers extends Collection
     public function all()
     {
         $all = parent::all();
-        $out = [];
+        $out = array();
         foreach ($all as $key => $props) {
             $out[$props['originalKey']] = $props['value'];
         }

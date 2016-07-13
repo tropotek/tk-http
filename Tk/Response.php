@@ -106,7 +106,7 @@ class Response extends Message
      * @param int                   $status  The response status code.
      * @param array                 $headers The response headers.
      */
-    public function __construct($body = null, $status = 200, $headers = [])
+    public function __construct($body = null, $status = 200, $headers = array())
     {
         parent::__construct($headers);
         $this->body = $body ? $body : '';

@@ -31,7 +31,7 @@ class Message
      *
      * @param array $headers
      */
-    public function __construct($headers = [])
+    public function __construct($headers = array())
     {
         $this->headers = Headers::create($headers);
     }

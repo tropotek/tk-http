@@ -80,7 +80,7 @@ class UploadedFile
      */
     public static function parseUploadedFiles(array $uploadedFiles)
     {
-        $parsed = [];
+        $parsed = array();
         foreach ($uploadedFiles as $field => $uploadedFile) {
             if (!isset($uploadedFile['error'])) {
                 if (is_array($uploadedFile)) {
@@ -88,7 +88,7 @@ class UploadedFile
                 }
                 continue;
             }
-            $parsed[$field] = [];
+            $parsed[$field] = array();
             if (!is_array($uploadedFile['error'])) {
                 $parsed[$field] = new static(
                     $uploadedFile['tmp_name'],
