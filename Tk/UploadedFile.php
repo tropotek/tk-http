@@ -155,15 +155,13 @@ class UploadedFile
         if ($this->moved) {
             throw new \RuntimeException('Uploaded file already moved');
         }
-
         if (!is_writable(dirname($targetPath))) {
             throw new \InvalidArgumentException('Upload target path is not writable');
         }
-
         $targetIsStream = strpos($targetPath, '://') > 0;
         if ($targetIsStream) {
             if (!copy($this->file, $targetPath)) {
-                throw new \RuntimeException(sprintf('Error moving uploaded file %1s to %2s', $this->name, $targetPath));
+                throw new \RuntimeException(sprintf('2001 Error moving uploaded file %1s to %2s', $this->name, $targetPath));
             }
             if (!unlink($this->file)) {
                 throw new \RuntimeException(sprintf('Error removing uploaded file %1s', $this->name));
@@ -174,11 +172,11 @@ class UploadedFile
             }
 
             if (!move_uploaded_file($this->file, $targetPath)) {
-                throw new \RuntimeException(sprintf('Error moving uploaded file %1s to %2s', $this->name, $targetPath));
+                throw new \RuntimeException(sprintf('2002 Error moving uploaded file %1s to %2s', $this->name, $targetPath));
             }
         } else {
             if (!rename($this->file, $targetPath)) {
-                throw new \RuntimeException(sprintf('Error moving uploaded file %1s to %2s', $this->name, $targetPath));
+                throw new \RuntimeException(sprintf('2003 Error moving uploaded file %1s to %2s', $this->name, $targetPath));
             }
         }
         $this->file = $targetPath;
@@ -209,6 +207,16 @@ class UploadedFile
     }
 
     /**
+     * Retrieve the error text associated with the uploaded file.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return $this->convertErrorCode($this->error);
+    }
+
+    /**
      * Retrieve the filename sent by the client.
      *
      * Do not trust the value returned by this method. A client could send
@@ -221,9 +229,27 @@ class UploadedFile
      * @return string|null The filename sent by the client or null if none
      *     was provided.
      */
-    public function getClientFilename()
+    public function getFilename()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the filename.
+     *
+     * This will throw an exception if you try to set the filename after the file is moved.
+     *
+     * @param $name
+     * @return $this
+     * @throws Exception
+     */
+    public function setFileName($name)
+    {
+        if ($this-$this->moved) {
+            throw new \Tk\Exception('Cannot set the filename after a move operation.');
+        }
+        $this->name = $name;
+        return $this;
     }
 
     /**
@@ -239,7 +265,7 @@ class UploadedFile
      * @return string|null The media type sent by the client or null if none
      *     was provided.
      */
-    public function getClientMediaType()
+    public function getMediaType()
     {
         return $this->type;
     }
@@ -258,7 +284,37 @@ class UploadedFile
         return $this->size;
     }
     
-    
+
+
+
+    /**
+     * getErrorString
+     *
+     * @param int $errorId
+     * @return string
+     */
+    private function convertErrorCode($errorId = null)
+    {
+        switch ($errorId) {
+//            case \UPLOAD_ERR_POSTMAX:
+//                return "The uploaded file exceeds post max file size of " . ini_get('post_max_size');
+            case \UPLOAD_ERR_INI_SIZE :
+                return 'File exceeds max file size of ' . ini_get('upload_max_filesize');
+            case \UPLOAD_ERR_FORM_SIZE :
+                return 'File exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+            case \UPLOAD_ERR_PARTIAL :
+                return 'File was only partially uploaded.';
+            case \UPLOAD_ERR_NO_FILE :
+                return 'No file was uploaded.';
+            case \UPLOAD_ERR_NO_TMP_DIR :
+                return 'Missing a temporary folder.';
+            case \UPLOAD_ERR_CANT_WRITE :
+                return 'Failed to write file to disk';
+            case \UPLOAD_ERR_OK:
+            default :
+                return '';
+        }
+    }
     
     
 }

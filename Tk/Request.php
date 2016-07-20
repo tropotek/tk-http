@@ -306,12 +306,16 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     {
         return $this->uploadedFiles;
     }
-    
+
+    /**
+     *
+     * @param $name
+     * @return UploadedFile|array|null
+     */
     public function getUploadedFile($name)
     {
         if (isset($this->uploadedFiles[$name]))
-            $this->uploadedFiles[$name];
-        return [];
+            return $this->uploadedFiles[$name];
     }
     
     
@@ -596,8 +600,9 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     /**
      * Set collection item
      *
-     * @param string $key   The data key
-     * @param mixed  $value The data value
+     * @param string $key The data key
+     * @param mixed $value The data value
+     * @throws Exception
      * @todo This should not be allowed technically
      */
     public function offsetSet($key, $value)
@@ -610,6 +615,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * Remove item from collection
      *
      * @param string $key The data key
+     * @throws Exception
      * @todo This should not be allowed technically
      */
     public function offsetUnset($key)
