@@ -128,7 +128,7 @@ class Session implements \ArrayAccess
      * Start this session
      *
      * @throws Exception
-     * @return \Tk\Session\Adapter\Iface
+     * @return Session
      */
     public function start()
     {
