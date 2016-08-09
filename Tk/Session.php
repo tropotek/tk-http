@@ -166,19 +166,19 @@ class Session implements \ArrayAccess
         if ($this->getCookie()->has($sesName)) {
             //$this->getCookie()->set($sesName, $this->getRequest()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
             $this->getCookie()->set($sesName, $this->getCookie()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
+
         }
 
         if(!$this->has(self::KEY_DATA)) {
-            // TODO: This is not being saved to the session, CHECK IT!!!!!!!!!!!!!!!!!!!!!
-            $this->data = array(
-                'session_id' => $this->getId(),
-                'user_agent' => $this->getRequest()->getUserAgent(),
-                'ip_address' => $this->getRequest()->getIp(),
-                'site_referer' => $this->getRequest()->getReferer(),
-                'total_hits' => 0,
-                'last_activity' => 0
-            );
+            $this->setData('session_id', $this->getId());
+            $this->setData('user_agent', $this->getRequest()->getUserAgent());
+            $this->setData('ip_address', $this->getRequest()->getIp());
+            $this->setData('site_referer', $this->getRequest()->getReferer()->toString());
+            $this->setData('total_hits', 0);
+            $this->setData('last_activity', 0);
             $this->set(self::KEY_DATA, $this->data);
+        } else {
+            $this->data = $this->get(self::KEY_DATA);
         }
 
         // Increase total hits
@@ -392,7 +392,7 @@ class Session implements \ArrayAccess
      */
     public function set($key, $value = null)
     {
-        if ($key == self::KEY_DATA) return $this;
+        //if ($key == self::KEY_DATA) return $this;
         if ($value === null) {
             $this->delete($key);
         } else {
