@@ -169,6 +169,7 @@ class Session implements \ArrayAccess
         }
 
         if(!$this->has(self::KEY_DATA)) {
+            // TODO: This is not being saved to the session, CHECK IT!!!!!!!!!!!!!!!!!!!!!
             $this->data = array(
                 'session_id' => $this->getId(),
                 'user_agent' => $this->getRequest()->getUserAgent(),
