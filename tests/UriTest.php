@@ -7,6 +7,7 @@
 namespace Tk\Test;
 
 use \Tk\Uri;
+
 /**
  *
  * @package Tk\Test
