@@ -283,8 +283,14 @@ class UploadedFile
     {
         return $this->size;
     }
-    
 
+    /**
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 
 
     /**
