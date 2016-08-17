@@ -173,7 +173,8 @@ class Session implements \ArrayAccess
             $this->setData('session_id', $this->getId());
             $this->setData('user_agent', $this->getRequest()->getUserAgent());
             $this->setData('ip_address', $this->getRequest()->getIp());
-            $this->setData('site_referer', $this->getRequest()->getReferer()->toString());
+            if ($this->getRequest()->getReferer())
+                $this->setData('site_referer', $this->getRequest()->getReferer()->toString());
             $this->setData('total_hits', 0);
             $this->setData('last_activity', 0);
             $this->set(self::KEY_DATA, $this->data);
