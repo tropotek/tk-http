@@ -294,7 +294,8 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function reset()
     {
-        return $this->query = array();
+        $this->query = array();
+        return $this;
     }
 
     /**
