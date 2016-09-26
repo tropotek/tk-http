@@ -20,16 +20,12 @@ namespace Tk\Session\Adapter;
  */
 class Database implements Iface
 {
+    static $DB_TABLE = 'sys_session';
 
     /**
      * @var \Tk\Db\Pdo
      */
     protected $db = null;
-    
-    /**
-     * @var mixed|string
-     */
-    protected $table = 'session';
 
     /**
      * @var bool|mixed
@@ -46,19 +42,12 @@ class Database implements Iface
      * Create a Database session adaptor.
      *
      * @param \Tk\Db\Pdo $db
-     * @param string $table
      * @param \Tk\Encrypt $encrypt
      */
-    public function __construct(\Tk\Db\Pdo $db, $table = 'session', $encrypt = null)
+    public function __construct(\Tk\Db\Pdo $db, $encrypt = null)
     {
-        $this->db = $db;
-        $this->table = $table;
         $this->encrypt = $encrypt;
-
-        // TODO: Auto install db table if not exists....
-        if (!$this->db->tableExists($table)) {
-            $this->installDb();
-        }
+        $this->setDb($db);
     }
 
     /**
@@ -66,9 +55,10 @@ class Database implements Iface
      *
      * @throws \Tk\Db\Exception
      */
-    private function installDb()
+    private function install()
     {
-        $tbl = $this->db->quoteParameter($this->table);
+        if ($this->db->tableExists($this->getTable())) return;
+        $tbl = $this->db->quoteParameter($this->getTable());
         $sql = <<<SQL
 CREATE TABLE $tbl (
   session_id VARCHAR(127) NOT NULL PRIMARY KEY,
@@ -79,7 +69,6 @@ CREATE TABLE $tbl (
 SQL;
         $this->db->exec($sql);
     }
-
 
     protected function encode($str)
     {
@@ -111,7 +100,7 @@ SQL;
     public function read($id)
     {
         // Load the session
-        $query = sprintf('SELECT * FROM %s WHERE session_id = %s LIMIT 1', $this->db->quoteParameter($this->table), $this->db->quote($id));
+        $query = sprintf('SELECT * FROM %s WHERE session_id = %s LIMIT 1', $this->db->quoteParameter($this->getTable()), $this->db->quote($id));
         $result = $this->db->query($query);
         $row = $result->fetchObject();
         if (!$row) {  // No current session
@@ -138,17 +127,17 @@ SQL;
         if ($this->sessionId === null) {
             // Insert a new session
             $query = sprintf('INSERT INTO %s VALUES (%s, %s, %s, %s)', 
-                $this->table, $this->db->quote($id), $this->db->quote($data), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)));
+                $this->getTable(), $this->db->quote($id), $this->db->quote($data), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)));
             $this->db->query($query);
         } elseif ($id === $this->sessionId) {
             // Update the existing session
             $query = sprintf("UPDATE %s SET modified = %s, data = %s WHERE session_id = %s", 
-                $this->table, $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($data), $this->db->quote($id));
+                $this->getTable(), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($data), $this->db->quote($id));
             $this->db->query($query);
         } else {
             // Update the session and id
             $query = sprintf("UPDATE %s SET session_id = %s, modified = %s, data = %s WHERE session_id = %s", 
-                $this->table, $this->db->quote($id), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($data), $this->db->quote($this->sessionId));
+                $this->getTable(), $this->db->quote($id), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->db->quote($data), $this->db->quote($this->sessionId));
             $this->db->query($query);
             // Set the new session id
             $this->sessionId = $id;
@@ -164,7 +153,7 @@ SQL;
      */
     public function destroy($id)
     {
-        $query = sprintf('DELETE FROM %s WHERE session_id = %s LIMIT 1', $this->table, $this->db->quote($id));
+        $query = sprintf('DELETE FROM %s WHERE session_id = %s LIMIT 1', $this->getTable(), $this->db->quote($id));
         $this->db->query($query);
         $this->sessionId = null;
         return true;
@@ -181,7 +170,7 @@ SQL;
         session_regenerate_id();
         $nid = session_id();
         $query = sprintf("UPDATE %s SET session_id = %s, modified = %s WHERE id = %s",
-                $this->table, $this->db->quote($nid), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getTable(), $this->db->quote($nid), $this->db->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
                 $this->db->quote($oid));
         $this->db->query($query);
         return $nid;
@@ -196,12 +185,31 @@ SQL;
     public function gc($maxlifetime)
     {
         // Delete all expired sessions
-        $query = sprintf('DELETE FROM %s WHERE modified < %s', $this->table, $this->db->quote($this->createDate(time() - $maxlifetime)->format(\Tk\Date::ISO_DATE)));
+        $query = sprintf('DELETE FROM %s WHERE modified < %s', $this->getTable(), $this->db->quote($this->createDate(time() - $maxlifetime)->format(\Tk\Date::ISO_DATE)));
         $this->db->query($query);
         return true;
     }
 
 
+
+    /**
+     * @return \Tk\Db\Pdo
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
+     * @param \Tk\Db\Pdo $db
+     * @return $this
+     */
+    public function setDb($db)
+    {
+        $this->db = $db;
+        $this->install();
+        return $this;
+    }
 
     /**
      * Open the session
@@ -223,6 +231,16 @@ SQL;
     public function close()
     {
         return true;
+    }
+
+    /**
+     * Get the table name for queries
+     *
+     * @return string
+     */
+    protected function getTable()
+    {
+        return self::$DB_TABLE;
     }
 
     /**
