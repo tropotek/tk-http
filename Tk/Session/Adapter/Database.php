@@ -190,6 +190,17 @@ SQL;
         return true;
     }
 
+    /**
+     * Get all the sessionRecords
+     *
+     * @return \Tk\Db\PDOStatement
+     */
+    public function getSessionRecords()
+    {
+        $query = sprintf('SELECT * FROM %s', $this->getDb()->quoteParameter($this->getTable()));
+        return $this->getDb()->query($query);
+    }
+
 
 
     /**
