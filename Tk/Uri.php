@@ -195,7 +195,11 @@ class Uri implements \Serializable, \IteratorAggregate
             }
             if (array_key_exists('port', $components)) {
                 $this->setPort($components['port']);
-            } else if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $this->getHost() == $host) {
+            } else if (isset($_SERVER['SERVER_PORT']) &&
+                ($_SERVER['SERVER_PORT'] != 80 || $this->scheme != 'http') &&
+                ($_SERVER['SERVER_PORT'] != 443 || $this->scheme != 'https') &&
+                $this->getHost() == $host)
+            {
                 $this->setPort($_SERVER['SERVER_PORT']);
             }
             if (array_key_exists('user', $components)) {
