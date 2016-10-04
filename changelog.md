@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.3 [2016-10-04]:
+-------------------------------
+ - Added dynamic Icons to top of admin index page
+
+
 Ver 2.0.2 [2016-09-05]:
 -------------------------------
  - Fixed the shamozzle...
