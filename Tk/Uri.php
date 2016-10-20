@@ -349,12 +349,24 @@ class Uri implements \Serializable, \IteratorAggregate
      * @param string $field
      * @return Uri
      */
-    public function delete($field)
+    public function remove($field)
     {
         if ($this->has($field)) {
             unset($this->query[$field]);
         }
         return $this;
+    }
+
+    /**
+     * Remove a field in the query string
+     *
+     * @param string $field
+     * @return Uri
+     * @deprecated Use remove($field)
+     */
+    public function delete($field)
+    {
+        return $this->remove($field);
     }
 
     /**
