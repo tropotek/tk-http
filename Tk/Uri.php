@@ -105,12 +105,13 @@ class Uri implements \Serializable, \IteratorAggregate
         
         $spec = trim($spec);
         if ($spec && self::$BASE_URL_PATH) {
-            // TODO: not checked `domain.com/path/path`, need to create a regex for this
-            // See unit test for more examples...
             $p = parse_url($spec);
             if (!preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
                 if (self::$BASE_URL_PATH) {
-                    $spec = str_replace(self::$BASE_URL_PATH, '', $spec);
+                    if (preg_match('/^'.  preg_quote(self::$BASE_URL_PATH, '/') . '/', $spec)) {
+                        $spec = preg_replace('/^'.preg_quote(self::$BASE_URL_PATH, '/').'/', '', $spec);
+                    }
+                    //$spec = str_replace(self::$BASE_URL_PATH, '', $spec);
                     $spec = trim($spec, '/');
                     $spec = self::$BASE_URL_PATH . '/' . $spec;
                 }
@@ -659,8 +660,10 @@ class Uri implements \Serializable, \IteratorAggregate
     public function getRelativePath()
     {
         $path = $this->getPath();
-        $buri = parse_url(self::$BASE_URL_PATH);
-        $path = str_replace($buri['path'], '', $path);
+        if (preg_match('/^'.  preg_quote(self::$BASE_URL_PATH, '/') . '/', $path)) {
+            $path = preg_replace('/^'.preg_quote(self::$BASE_URL_PATH, '/').'/', '', $path);
+        }
+        //$path = str_replace(self::$BASE_URL_PATH, '', $path);
         return $path;
     }
 
