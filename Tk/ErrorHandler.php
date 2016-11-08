@@ -98,7 +98,8 @@ class ErrorHandler
         if ($errno <= E_USER_DEPRECATED) {
             // Log the error only
             if ($this->log) {
-                $this->log->warning($e->__toString(), $errcontext);
+                //$this->log->warning($e->__toString(), $errcontext);
+                $this->log->warning($e->__toString());
             } else {
                 error_log($e->__toString()."\n");
             }
