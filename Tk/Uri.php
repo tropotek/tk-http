@@ -25,7 +25,7 @@ namespace Tk;
  * 
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
- * @link http://www.php-fig.org/psr/psr-7/#3-6-psr-http-message-uploadedfileinterface
+ * @link http://www.php-fig.org/psr/psr-7/#3-5-psr-http-message-uriinterface
  * @license Copyright 2007 Michael Mifsud
  */
 class Uri implements \Serializable, \IteratorAggregate
@@ -106,7 +106,7 @@ class Uri implements \Serializable, \IteratorAggregate
         $spec = trim($spec);
         if ($spec && self::$BASE_URL_PATH) {
             $p = parse_url($spec);
-            if (!preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
+            if (!preg_match('/^(#|javascript|mailto|data):/i', $spec) && !isset($p['scheme'])) {
                 if (self::$BASE_URL_PATH) {
                     if (preg_match('/^'.  preg_quote(self::$BASE_URL_PATH, '/') . '/', $spec)) {
                         $spec = preg_replace('/^'.preg_quote(self::$BASE_URL_PATH, '/').'/', '', $spec);
@@ -119,7 +119,7 @@ class Uri implements \Serializable, \IteratorAggregate
         }
         
         $this->spec = $spec;
-        if (!preg_match('/^(#|javascript|mailto)/i', $this->spec)) {
+        if (!preg_match('/^(#|javascript|mailto|data):/i', $this->spec)) {
             $this->init();
         }
     }
