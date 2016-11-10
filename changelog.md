@@ -1,5 +1,15 @@
 #CHANGELOG#
 
+Ver 2.0.4 [2016-11-11]:
+-------------------------------
+ - That will do fine
+ - Deprecated debug lib in favor of the framework \Tk\Debug objects and new framework functions folder
+ - Fixed some url path issues, added PageBytes Dom Filter
+ - Started updating the Youtube queue
+ - Added remote file handlers
+ - Started added UI controllers for LTI pages
+
+
 Ver 2.0.3 [2016-10-04]:
 -------------------------------
  - Added dynamic Icons to top of admin index page
