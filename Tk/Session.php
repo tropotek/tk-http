@@ -433,11 +433,23 @@ class Session implements \ArrayAccess
      * @param string $key
      * @return $this|void
      */
-    public function delete($key)
+    public function remove($key)
     {
         if ($key != self::KEY_DATA)
             unset($_SESSION[$key]);
         return $this;
+    }
+
+    /**
+     * Unset an element from the session
+     *
+     * @param string $key
+     * @return $this|void
+     * @deprecated Use remove()
+     */
+    public function delete($key)
+    {
+        return $this->remove($key);
     }
 
     /**
