@@ -22,12 +22,12 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     public function __construct()
     {
         parent::__construct('Session Test');
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $this->session = Session::getInstance();
     }
 
     public function setUp()
     {
-        $_SERVER['SERVER_NAME'] = 'localhost';
-        $this->session = new Session(); 
     }
 
     public function tearDown()
@@ -42,7 +42,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Tk\Session', $this->session);
         
         $this->session->set('test.var1', 'testtest');
-        $t = $this->session->exists('test.var1');
+        $t = $this->session->has('test.var1');
         $this->assertTrue($t);
 
 
@@ -52,7 +52,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
     {
         $this->session->set('test.var2', 'testtest');
         $this->assertEquals($this->session->getOnce('test.var2'), 'testtest');
-        $this->assertFalse($this->session->exists('test.var2'));
+        $this->assertFalse($this->session->has('test.var2'));
         
         // TODO Fix this test??? Not sure what is going on with the name???
         //$this->assertEquals(md5($_SERVER['SERVER_NAME']), $this->session->getName());
