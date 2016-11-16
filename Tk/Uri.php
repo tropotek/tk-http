@@ -334,6 +334,16 @@ class Uri implements \Serializable, \IteratorAggregate
     }
 
     /**
+     * Get all the query params
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->query;
+    }
+
+    /**
      * Check if a query field exists in the array
      *
      * @param string $field
