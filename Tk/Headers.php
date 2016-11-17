@@ -60,9 +60,9 @@ class Headers extends Collection
      *
      * @return array
      */
-    public function all()
+    public function all($regex = null)
     {
-        $all = parent::all();
+        $all = parent::all($regex);
         $out = array();
         foreach ($all as $key => $props) {
             $out[$props['originalKey']] = $props['value'];
