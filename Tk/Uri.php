@@ -173,7 +173,7 @@ class Uri implements \Serializable, \IteratorAggregate
         }
 
         // build spec into URL format
-        if (preg_match('/^\/\//i', $spec)) {
+        if (preg_match('/^\/\//', $spec)) {
             $spec = $this->scheme . ':' . $spec;
         }
         if (preg_match('/^www\./i', $spec)) {
