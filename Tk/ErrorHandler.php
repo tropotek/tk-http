@@ -23,7 +23,7 @@ class ErrorHandler
     /**
      * @var ErrorHandler
      */
-    static $instance = null;
+    public static $instance = null;
 
     /**
      * @var LoggerInterface
@@ -46,7 +46,7 @@ class ErrorHandler
      * @param LoggerInterface $log
      * @return ErrorHandler
      */
-    static function getInstance(LoggerInterface $log = null)
+    public static function getInstance(LoggerInterface $log = null)
     {
         if (static::$instance == null) {
             static::$instance = new static($log);
@@ -68,7 +68,7 @@ class ErrorHandler
      * @return bool
      * @throws Exception
      */
-    function errorHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
+    public function errorHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
     {
 //        if (!(error_reporting() & $errno)) {  // Check the PHP ini for the error setting
 //            return false;

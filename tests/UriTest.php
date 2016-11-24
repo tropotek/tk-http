@@ -10,7 +10,6 @@ use \Tk\Uri;
 
 /**
  *
- * @package Tk\Test
  */
 class UriTest extends \PHPUnit_Framework_TestCase
 {

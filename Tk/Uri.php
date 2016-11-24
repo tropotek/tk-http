@@ -33,7 +33,7 @@ class Uri implements \Serializable, \IteratorAggregate
     /**
      * @var string
      */
-    static public $BASE_URL_PATH = '';
+    public static $BASE_URL_PATH = '';
     
     /**
      * This is the supplied full/partial uri

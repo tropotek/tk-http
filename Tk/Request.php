@@ -26,7 +26,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * 
      * @var callable
      */
-    static $sanitizerCallback = null;
+    public static $sanitizerCallback = null;
 
     /**
      * @var array

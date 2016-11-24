@@ -18,9 +18,9 @@ class Session implements \ArrayAccess
     const KEY_DATA = '_-___SESSION_DATA___-_';
 
     /**
-     * @var \Tk\Session
+     * @var Session
      */
-    static $instance = null;
+    public static $instance = null;
 
     /**
      * @var bool
@@ -116,7 +116,7 @@ class Session implements \ArrayAccess
      * @param array $params
      * @return Session
      */
-    static function getInstance($adapter = null, $params = array(), $request = null, $cookie = null)
+    public static function getInstance($adapter = null, $params = array(), $request = null, $cookie = null)
     {
         if (self::$instance == null) {
             self::$instance = new static($adapter, $params, $request, $cookie);

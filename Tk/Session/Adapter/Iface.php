@@ -9,7 +9,6 @@ namespace Tk\Session\Adapter;
 /**
  * A session object
  *
- * @package Tk\Session\Adapter
  */
 interface Iface extends \SessionHandlerInterface
 {
