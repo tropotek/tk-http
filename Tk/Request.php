@@ -287,7 +287,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
         if ($this->getUri() === null) {
             return [];
         }
-        return $this->getQueryParams();
+        return $this->getUri()->getQueryArray();
     }
     
     /**

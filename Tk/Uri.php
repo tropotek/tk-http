@@ -575,6 +575,15 @@ class Uri implements \Serializable, \IteratorAggregate
         $query = substr($query, 0, -1);
         return $query;
     }
+
+    /**
+     * Return the query name value pairs array
+     *
+     * @return array
+     */
+    public function getQueryArray() {
+        return $this->query;
+    }
         
     /**
      * Retrieve the fragment component of the URI.
