@@ -113,7 +113,17 @@ class Response extends Message
         $this->status = $this->filterStatus($status);
     }
 
-
+    /**
+     * @param null|string $body
+     * @param int $status
+     * @param array $headers
+     * @return Response
+     */
+    public static function create($body = null, $status = 200, $headers = array()) {
+        $obj = new self($body, $status, $headers);
+        return $obj;
+    }
+    
     /**
      * Sends HTTP headers.
      *
