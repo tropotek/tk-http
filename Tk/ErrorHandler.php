@@ -94,8 +94,8 @@ class ErrorHandler
             case E_USER_DEPRECATED:     $e = new UserDeprecatedException   ($errstr, $errno); break;
             default: $e = new Exception($errstr, $errno);
         }
-        
-        if ($errno <= E_USER_DEPRECATED) {
+
+        if ($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED || $errno == E_RECOVERABLE_ERROR) {
             // Log the error only
             if ($this->log) {
                 //$this->log->warning($e->__toString(), $errcontext);
