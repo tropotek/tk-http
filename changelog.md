@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.6 [2017-02-22]:
+-------------------------------
+ - Added new change password system
+ - Fixed recover password system
+ - Minor Code Updates
+
+
 Ver 2.0.5 [2016-12-30]:
 -------------------------------
  - Added new crumbs system
