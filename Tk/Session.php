@@ -99,8 +99,6 @@ class Session implements \ArrayAccess
         if ($this->getParam('session.gc_maxlifetime'))
             ini_set('session.gc_maxlifetime', $this->getParam('session.gc_maxlifetime'));
 
-
-
         // Start this session
         $this->start();
 
@@ -147,8 +145,6 @@ class Session implements \ArrayAccess
         // Make sure that sessions are closed before exiting
         register_shutdown_function(array($this, 'writeClose'));
 
-
-
         // Name the session, this will also be the name of the cookie
         $sesName = $this->getParam('session.name');
         if (!preg_match('~^(?=.*[a-z])[a-z0-9_]++$~iD', $sesName)) {
@@ -166,7 +162,6 @@ class Session implements \ArrayAccess
         if ($this->getCookie()->has($sesName)) {
             //$this->getCookie()->set($sesName, $this->getRequest()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
             $this->getCookie()->set($sesName, $this->getCookie()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
-
         }
 
         if(!$this->has(self::KEY_DATA)) {
@@ -380,7 +375,7 @@ class Session implements \ArrayAccess
     public function getOnce($key)
     {
         $val = $this->get($key);
-        $this->delete($key);
+        $this->remove($key);
         return $val;
     }
 
@@ -395,7 +390,7 @@ class Session implements \ArrayAccess
     {
         //if ($key == self::KEY_DATA) return $this;
         if ($value === null) {
-            $this->delete($key);
+            $this->remove($key);
         } else {
             $_SESSION[$key] = $value;
         }
@@ -431,7 +426,7 @@ class Session implements \ArrayAccess
      * Unset an element from the session
      *
      * @param string $key
-     * @return $this|void
+     * @return $this
      */
     public function remove($key)
     {
@@ -444,7 +439,7 @@ class Session implements \ArrayAccess
      * Unset an element from the session
      *
      * @param string $key
-     * @return $this|void
+     * @return $this
      * @deprecated Use remove()
      */
     public function delete($key)
@@ -527,7 +522,7 @@ class Session implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        $this->delete($offset);
+        $this->remove($offset);
     }
     
     
