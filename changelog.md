@@ -1,5 +1,11 @@
 #CHANGELOG#
 
+Ver 2.0.7 [2017-04-02]:
+-------------------------------
+ - Minor Code Updates
+ - 252s-dev.vet.unimelb.edu.au
+
+
 Ver 2.0.6 [2017-02-22]:
 -------------------------------
  - Added new change password system
