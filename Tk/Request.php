@@ -111,7 +111,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * @param null|array $params
      * @param null|array $serverParams
      * @param null|array $uploadedFiles
-     * @return static
+     * @return Request
      */
     public static function create($params = null, $serverParams = null, $uploadedFiles = null)
     {
