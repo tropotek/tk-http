@@ -839,7 +839,7 @@ class Uri implements \Serializable, \IteratorAggregate
 
         $arr = debug_backtrace();
         $arr = $arr[0];
-        error_log('- ' . $code . ' REDIRECT ['.$this->toString().'] Called from ' . basename($arr['file']) . '[' . $arr['line'] . '] '."\n");
+        error_log('- ' . $code . ' REDIRECT ['.$this->toString().'] Called from ' . basename($arr['file']) . '[' . $arr['line'] . '] ');
 
         header("Location: {$this->toString()}");
         exit();
