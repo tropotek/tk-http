@@ -167,6 +167,7 @@ class Response extends Message
     
     /**
      * Sends HTTP headers and content.
+     * tkLib v1 equivalent to flush()
      *
      * @return Response
      */
