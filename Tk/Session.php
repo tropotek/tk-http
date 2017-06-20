@@ -160,23 +160,32 @@ class Session implements \ArrayAccess
 
         // reset the session cookie expiration
         if ($this->getCookie()->has($sesName)) {
-            //$this->getCookie()->set($sesName, $this->getRequest()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
             $this->getCookie()->set($sesName, $this->getCookie()->get($sesName), time() + (int)$this->getParam('session.gc_maxlifetime'));
         }
 
+        $referer = $this->getRequest()->getReferer();
         if(!$this->has(self::KEY_DATA)) {
             $this->setData('session_id', $this->getId());
             $this->setData('user_agent', $this->getRequest()->getUserAgent());
             $this->setData('ip_address', $this->getRequest()->getIp());
-            if ($this->getRequest()->getReferer())
-                $this->setData('site_referer', $this->getRequest()->getReferer()->toString());
+            if ($referer) {
+                $this->setData('site_referer', $referer->toString());
+                if (!$this->getData('page_referer') || ($this->getData('page_referer') != $referer)) {
+                    $this->setData('page_referer', $referer->toString());
+                }
+            }
             $this->setData('total_hits', 0);
             $this->setData('last_activity', 0);
             $this->set(self::KEY_DATA, $this->data);
         } else {
             $this->data = $this->get(self::KEY_DATA);
+            if ($referer) {
+                if (!$this->getData('page_referer') || (\Tk\Uri::create()->toString() != $referer->toString())) {
+                    $this->setData('page_referer', $referer->toString());
+                }
+                $this->set(self::KEY_DATA, $this->data);
+            }
         }
-
         // Increase total hits
         $hits = (int)$this->getData('total_hits') + 1;
         $this->setData('total_hits', $hits);
@@ -280,6 +289,16 @@ class Session implements \ArrayAccess
         if (isset($this->data[$key]))
             return $this->data[$key];
         return '';
+    }
+
+    /**
+     * get the page referring URL
+     *
+     * @return Uri
+     */
+    public function getBackUrl()
+    {
+        return \Tk\Uri::create($this->getData('page_referer'));
     }
 
     /**
