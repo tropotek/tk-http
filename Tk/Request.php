@@ -552,25 +552,15 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     
     /**
      * Returns the raw post data.
-     *
      * 
      * note: In general, php://input should be used instead of $HTTP_RAW_POST_DATA.
      * @return string
      * @link http://php.net/manual/en/reserved.variables.httprawpostdata.php
-     * @deprecated This could be removed in future versions in favor of the PSR7 stream system.
      */
     public function getRawPostData()
     {
         return file_get_contents("php://input");
     }
-
-
-
-
-
-
-
-
 
 
     /**
