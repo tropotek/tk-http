@@ -16,7 +16,6 @@ namespace Tk;
  * @license Copyright 2015 Michael Mifsud
  */
 class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate, \Countable
-//class Request extends ClientRequest implements \ArrayAccess, \Countable
 {
     
     /**
@@ -88,8 +87,6 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
         $this->sanitize($this->params);
         $this->sanitize($this->serverParams);
         
-        
-
         $this->registerMediaTypeParser('application/json', function ($input) {
             return json_decode($input, true);
         });
