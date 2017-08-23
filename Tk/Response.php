@@ -120,7 +120,7 @@ class Response extends Message
      * @return Response
      */
     public static function create($body = null, $status = 200, $headers = array()) {
-        $obj = new self($body, $status, $headers);
+        $obj = new static($body, $status, $headers);
         return $obj;
     }
     

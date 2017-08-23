@@ -17,8 +17,7 @@ class ResponseJson extends Response
             if ($json === false)
                 throw new \Tk\Exception('Cannot conver value to JSON string.');
         }
-        
-        $obj = new self($json, $status, $headers);
+        $obj = new static($json, $status, $headers);
         $obj->addHeader('Cache-Control', 'no-cache, must-revalidate');
         $obj->addHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
         $obj->addHeader('Content-type', 'application/json');
