@@ -137,7 +137,7 @@ class Uri implements \Serializable, \IteratorAggregate
     public static function create($spec = null)
     {
         if ($spec instanceof Uri)
-            return $spec;
+            return clone $spec;
         return new static($spec);
     }
     
