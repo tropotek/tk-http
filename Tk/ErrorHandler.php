@@ -75,6 +75,7 @@ class ErrorHandler
 //        }
         
         $e = null;
+        vd($errno);
         switch($errno)
         {
             case E_ERROR:               $e = new Exception                 ($errstr, $errno); break;
