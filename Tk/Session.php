@@ -432,11 +432,26 @@ class Session implements \ArrayAccess
     }
 
     /**
-     * Get the $_SESSION array
+     * Get all first level array keys of the session
      *
      * @return array
      */
+    public function keys()
+    {
+        return array_keys($_SESSION);
+    }
+
+    /**
+     * Get the $_SESSION array
+     *
+     * @return array
+     * @deprecated use Session::all()
+     */
     public function getAll()
+    {
+        return $this->all();
+    }
+    public function all()
     {
         return $_SESSION;
     }

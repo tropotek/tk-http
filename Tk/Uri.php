@@ -809,6 +809,7 @@ class Uri implements \Serializable, \IteratorAggregate
         if (headers_sent()) {
             throw new \Exception('Invalid URL Redirect, Headers Allready Sent.');
         }
+
         switch ($code) {
             case 301:
                 // Convert to GET
@@ -839,9 +840,11 @@ class Uri implements \Serializable, \IteratorAggregate
 
         $arr = debug_backtrace();
         $arr = $arr[0];
-        error_log('- ' . $code . ' REDIRECT ['.$this->toString().'] Called from ' . basename($arr['file']) . '[' . $arr['line'] . '] ');
+        \Tk\Log::notice($code . ' REDIRECT `'.$this->toString().'` Called ' . str_replace(\Tk\Config::getInstance()->getSitePath(), '', $arr['file']) . ':' . $arr['line'] . "\n");
 
-        header("Location: {$this->toString()}");
+        /*CLOSE THE SESSION WITH USER DATA*/
+        session_write_close();
+        header("Location: {$this->toString()}", true, $code);
         exit();
     }
     
