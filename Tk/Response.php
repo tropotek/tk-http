@@ -137,7 +137,8 @@ class Response extends Message
         }
 
         // status
-        header(sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(), self::$messages[$this->getStatusCode()]), true, $this->getStatusCode());
+        header(sprintf('HTTP/%s %s %s', $this->getProtocolVersion(), $this->getStatusCode(),
+            self::$messages[$this->getStatusCode()]), true, $this->getStatusCode());
 
         // headers
         foreach ($this->getHeaders() as $name => $values) {
@@ -197,11 +198,7 @@ class Response extends Message
         $this->body .= $data;
         return $this;
     }
-    
-    
-    
-    
-    
+
     
     
     
