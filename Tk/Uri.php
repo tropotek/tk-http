@@ -840,7 +840,7 @@ class Uri implements \Serializable, \IteratorAggregate
 
         $arr = debug_backtrace();
         $arr = $arr[0];
-        \Tk\Log::notice($code . ' REDIRECT `'.$this->toString().'` Called ' . str_replace(\Tk\Config::getInstance()->getSitePath(), '', $arr['file']) . ':' . $arr['line'] . "\n");
+        \Tk\Log::notice($code . ' REDIRECT `'.$this->toString().'` Called ' . str_replace(\Tk\Config::getInstance()->getSitePath(), '', $arr['file']) . ':' . $arr['line']);
 
         /*CLOSE THE SESSION WITH USER DATA*/
         session_write_close();
