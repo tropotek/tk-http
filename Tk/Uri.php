@@ -132,7 +132,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * </code>
      *
      * @param $spec
-     * @return Uri
+     * @return static
      */
     public static function create($spec = null)
     {
@@ -295,7 +295,7 @@ class Uri implements \Serializable, \IteratorAggregate
     /**
      * clear and reset the query string
      *
-     * @return Uri
+     * @return static
      */
     public function reset()
     {
@@ -308,7 +308,7 @@ class Uri implements \Serializable, \IteratorAggregate
      *
      * @param string $field
      * @param string $value
-     * @return Uri 
+     * @return static
      */
     public function set($field, $value = null)
     {
@@ -358,7 +358,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Remove a field in the query string
      *
      * @param string $field
-     * @return Uri
+     * @return static
      */
     public function remove($field)
     {
@@ -372,7 +372,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Remove a field in the query string
      *
      * @param string $field
-     * @return Uri
+     * @return static
      * @deprecated Use remove($field)
      */
     public function delete($field)
@@ -394,7 +394,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the fragment portion of the uri
      *
      * @param string $fragment
-     * @return Uri 
+     * @return static
      */
     public function setFragment($fragment)
     {
@@ -406,7 +406,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the port of the uri
      *
      * @param int $port
-     * @return Uri 
+     * @return static
      */
     public function setPort($port)
     {
@@ -424,7 +424,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the scheme
      *
      * @param string $scheme
-     * @return Uri
+     * @return static
      */
     public function setScheme($scheme)
     {
@@ -436,7 +436,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the host portion of the uri
      *
      * @param string $host
-     * @return Uri
+     * @return static
      */
     public function setHost($host)
     {
@@ -448,7 +448,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the path portion of the uri
      *
      * @param string $path
-     * @return Uri
+     * @return static
      */
     public function setPath($path)
     {
@@ -460,7 +460,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the password portion of the uri
      *
      * @param string $password
-     * @return Uri
+     * @return static
      */
     public function setPassword($password)
     {
@@ -472,7 +472,7 @@ class Uri implements \Serializable, \IteratorAggregate
      * Set the user portion of the uri
      *
      * @param string $username
-     * @return Uri
+     * @return static
      */
     public function setUsername($username)
     {
