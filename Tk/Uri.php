@@ -21,7 +21,7 @@ namespace Tk;
  * If the static $BASE_URL_PATH is set this will be prepended to all relative paths
  * when creating a URI
  * 
- * 
+ * @todo This object methods should all be mutable...
  * 
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
