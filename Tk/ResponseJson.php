@@ -2,15 +2,14 @@
 namespace Tk;
 
 /**
- * Class Response
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
 class ResponseJson extends Response
 {
-    public static function createJson($json = null, $status = 200, $headers = array()) {
+
+    public static function createJson($json = null, $status = self::HTTP_OK, $headers = array()) {
         
         if (!self::isJson($json)) {
             $json = json_encode($json);
