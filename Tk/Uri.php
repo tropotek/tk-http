@@ -705,13 +705,14 @@ class Uri implements \Serializable, \IteratorAggregate
     {
         return $this->port;
     }
-    
+
     /**
      * Return a string representation of this object
      *
      * @param bool $showHost
      * @param bool $showScheme
      * @return string
+     * @throws Exception
      */
     public function toString($showHost = true, $showScheme = true)
     {
@@ -847,7 +848,7 @@ class Uri implements \Serializable, \IteratorAggregate
         header("Location: {$this->toString()}", true, $code);
         exit();
     }
-    
+
     /**
      * Return the string representation as a URI reference.
      *
@@ -870,6 +871,7 @@ class Uri implements \Serializable, \IteratorAggregate
      *
      * @see http://tools.ietf.org/html/rfc3986#section-4.1
      * @return string
+     * @throws Exception
      */
     public function __toString()
     {
