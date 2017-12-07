@@ -2,8 +2,6 @@
 namespace Tk;
 
 /**
- * Class Cookie
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
@@ -30,7 +28,6 @@ class Cookie implements \ArrayAccess
      * @var bool
      */
     protected $httponly = false;
-    
     
 
     /**
