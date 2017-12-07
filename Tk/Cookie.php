@@ -28,7 +28,7 @@ class Cookie implements \ArrayAccess
      * @var bool
      */
     protected $httponly = false;
-    
+
 
     /**
      * Cookie constructor.
@@ -108,7 +108,7 @@ class Cookie implements \ArrayAccess
      *
      * @param string $key
      * @param string $value
-     * @param int $expire  Expiry time in seconds (Default: 30 Days)
+     * @param float|int $expire Expiry time in seconds (Default: 30 Days)
      * @return $this
      */
     public function set($key, $value, $expire = (86400*30))
@@ -128,7 +128,7 @@ class Cookie implements \ArrayAccess
      *
      * @param string $key
      * @param bool $removeGlobal Set to true to remove cookie from the current request global.
-     * @return bool
+     * @return Cookie
      */
     public function delete($key, $removeGlobal = true)
     {
