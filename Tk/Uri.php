@@ -286,10 +286,34 @@ class Uri implements \Serializable, \IteratorAggregate
      * Get the basename of this uri with or without its extension.
      *
      * @return string
+     * @deprecated Use Uri::basename();
      */
     public function getBasename()
     {
+        return $this->basename();
+    }
+
+    /**
+     * Get the basename of this uri with or without its extension.
+     *
+     * @return string
+     */
+    public function basename()
+    {
         return basename($this->getPath());
+    }
+
+    /**
+     * Get the basename of this uri with or without its extension.
+     *
+     * @return Uri
+     */
+    public function dirname()
+    {
+        $url = clone $this;
+        $url->spec = dirname($url->getPath());
+        $url->setPath(dirname($url->getPath()));
+        return $url;
     }
 
     /**
