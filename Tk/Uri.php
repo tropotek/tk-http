@@ -92,7 +92,6 @@ class Uri implements \Serializable, \IteratorAggregate
      * 
      * 
      * @param string $spec The String to parse as a URL
-     * @throws Exception
      */
     public function __construct($spec = null)
     {
@@ -241,8 +240,6 @@ class Uri implements \Serializable, \IteratorAggregate
         }
         return false;
     }
-    
-    
 
 
     /**
@@ -435,8 +432,10 @@ class Uri implements \Serializable, \IteratorAggregate
     public function setPort($port)
     {
         $port = (int)$port;
-        if ($port && ($port <= 0 || $port >= 65535))
-            throw new \InvalidArgumentException('Invalid port, valid values are 1-65535.');
+        if ($port && ($port <= 0 || $port >= 65535)) {
+            \Tk\Log::alert('Invalid port, valid values are 1-65535.');
+            $port = null;
+        }
         if ($port == 80) {
             $port = null;
         }
@@ -521,7 +520,6 @@ class Uri implements \Serializable, \IteratorAggregate
      *
      * @see https://tools.ietf.org/html/rfc3986#section-3.2
      * @return string The URI authority, in "[user-info@]host[:port]" format.
-     * @throws Exception
      */
     public function getAuthority()
     {
@@ -736,7 +734,6 @@ class Uri implements \Serializable, \IteratorAggregate
      * @param bool $showHost
      * @param bool $showScheme
      * @return string
-     * @throws Exception
      */
     public function toString($showHost = true, $showScheme = true)
     {
@@ -827,12 +824,12 @@ class Uri implements \Serializable, \IteratorAggregate
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
      * @link http://edoceo.com/creo/php-redirect.php
      * @param int $code
-     * @throws \Exception
      */
     public function redirect($code = 302)
     {
         if (headers_sent()) {
-            throw new \Exception('Invalid URL Redirect, Headers Allready Sent.');
+            \Tk\Log::error('Invalid URL Redirect, Headers Already Sent.');
+            exit();
         }
 
         switch ($code) {
@@ -895,7 +892,6 @@ class Uri implements \Serializable, \IteratorAggregate
      *
      * @see http://tools.ietf.org/html/rfc3986#section-4.1
      * @return string
-     * @throws Exception
      */
     public function __toString()
     {
