@@ -85,12 +85,8 @@ class Uri implements \Serializable, \IteratorAggregate
 
 
     /**
-     * __construct
+     * Paths that do not start with a scheme section to the uri are prepended with the  self::$BASE_URL . '/' string
      *
-     * 
-     * paths that do not start with a scheme section to the uri are prepended with the  self::$BASE_URL . '/' string
-     * 
-     * 
      * @param string $spec The String to parse as a URL
      */
     public function __construct($spec = null)
