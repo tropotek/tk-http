@@ -198,8 +198,8 @@ class Uri implements \Serializable, \IteratorAggregate
             {
                 $this->setPort($_SERVER['SERVER_PORT']);
             }
-            if (array_key_exists('UserIface', $components)) {
-                $this->setUsername($components['UserIface']);
+            if (array_key_exists('user', $components)) {
+                $this->setUsername($components['user']);
             }
             if (array_key_exists('pass', $components)) {
                 $this->setPassword($components['pass']);
