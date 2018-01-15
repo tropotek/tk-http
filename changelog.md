@@ -1,5 +1,11 @@
 #CHANGELOG#
 
+Ver 2.0.11 [2018-01-15]:
+-------------------------------
+ - Merge branch 'master' of https://github.com/tropotek/tk-http
+ - Minor Code Updates
+
+
 Ver 2.0.10 [2017-10-03]:
 -------------------------------
  - Minor Code Updates
