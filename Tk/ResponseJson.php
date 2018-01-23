@@ -13,8 +13,10 @@ class ResponseJson extends Response
         
         if (!self::isJson($json)) {
             $json = json_encode($json);
-            if ($json === false)
-                throw new \Tk\Exception('Cannot conver value to JSON string.');
+            if ($json === false) {
+                $json = json_encode(array('error' => 'Cannot convert response value to JSON string.'));
+                $status = self::HTTP_INTERNAL_SERVER_ERROR;
+            }
         }
         $obj = new static($json, $status, $headers);
         $obj->addHeader('Cache-Control', 'no-cache, must-revalidate');
