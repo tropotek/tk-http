@@ -262,12 +262,13 @@ class Session implements \ArrayAccess
     public function destroy()
     {
         if ($this->getId() !== '') {
-            // Destroy the session
-            session_destroy();
+            session_start();
             // Re-initialize the array
             $_SESSION = array();
             // Delete the session cookie
             $this->getCookie()->delete($this->getName());
+            // Destroy the session
+            session_destroy();
         }
     }
 
