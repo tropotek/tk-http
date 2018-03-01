@@ -78,6 +78,7 @@ class Cookie implements \ArrayAccess
      */
     public function __construct($path = '/', $domain = '', $secure = false, $httponly = false)
     {
+        vdd($path);
         $this->path = $path;
         if (!$domain && !empty($_SERVER['SERVER_NAME'])) {
             $domain = $_SERVER['SERVER_NAME'];
@@ -86,6 +87,40 @@ class Cookie implements \ArrayAccess
         $this->secure = $secure;
         $this->httponly = $httponly;
     }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSecure()
+    {
+        return $this->secure;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHttponly()
+    {
+        return $this->httponly;
+    }
+
+
 
     /**
      * Returns true if there is a cookie with this name.

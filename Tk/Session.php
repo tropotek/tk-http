@@ -156,6 +156,9 @@ class Session implements \ArrayAccess
             session_id($this->getRequest()->get($sesName));
         }
         // Start the session!
+        session_set_cookie_params(time() + (int)$this->getParam('session.gc_maxlifetime'),
+            $this->getCookie()->getPath(), $this->getCookie()->getDomain(),
+            $this->getCookie()->isSecure(), $this->getCookie()->isHttponly());
         session_start();
         $this->started = true;
 
