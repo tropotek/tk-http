@@ -7,6 +7,7 @@ namespace Tk;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
+ * @todo We need to check the session name and sessino ID values are correctly implemented???
  */
 class Session implements \ArrayAccess
 {
