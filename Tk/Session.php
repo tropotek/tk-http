@@ -8,6 +8,7 @@ namespace Tk;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  * @todo We need to check the session name and sessino ID values are correctly implemented???
+ * @todo Cookies are saved for each path dpth from the site path, we need to fix that....
  */
 class Session implements \ArrayAccess
 {
@@ -266,7 +267,9 @@ class Session implements \ArrayAccess
     public function destroy()
     {
         if ($this->getId() !== '') {
-            session_start();
+            if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+            }
             // Re-initialize the array
             $_SESSION = array();
             // Delete the session cookie
