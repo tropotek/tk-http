@@ -78,7 +78,6 @@ class Cookie implements \ArrayAccess
      */
     public function __construct($path = '/', $domain = '', $secure = false, $httponly = false)
     {
-        vdd($path);
         $this->path = $path;
         if (!$domain && !empty($_SERVER['SERVER_NAME'])) {
             $domain = $_SERVER['SERVER_NAME'];
