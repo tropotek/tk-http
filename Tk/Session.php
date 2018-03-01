@@ -302,8 +302,6 @@ class Session implements \ArrayAccess
     }
 
     /**
-     *
-     *
      * @param $key
      * @param $value
      * @return $this
@@ -347,6 +345,7 @@ class Session implements \ArrayAccess
 
     /**
      * Get the session id.
+     * Changes on re-generation
      *
      * @return  string
      */
@@ -356,7 +355,8 @@ class Session implements \ArrayAccess
     }
 
     /**
-     * Return the session id name
+     * Return the session name
+     * Does not change on regeneration
      *
      * @return string
      */

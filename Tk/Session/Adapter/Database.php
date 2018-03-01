@@ -137,7 +137,8 @@ SQL;
         } else {
             // Update the session and id
             $query = sprintf("UPDATE %s SET session_id = %s, modified = %s, data = %s WHERE session_id = %s", 
-                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->getDb()->quote($data), $this->getDb()->quote($this->sessionId));
+                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getDb()->quote($data), $this->getDb()->quote($this->sessionId));
             $this->getDb()->query($query);
             // Set the new session id
             $this->sessionId = $id;
@@ -167,12 +168,13 @@ SQL;
     public function regenerate()
     {
         $oid = session_id();
-        session_regenerate_id();
-        $nid = session_id();
-        $query = sprintf("UPDATE %s SET session_id = %s, modified = %s WHERE id = %s",
+        if (session_regenerate_id()) {
+            $nid = session_id();
+            $query = sprintf("UPDATE %s SET session_id = %s, modified = %s WHERE id = %s",
                 $this->getTable(), $this->getDb()->quote($nid), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
                 $this->getDb()->quote($oid));
-        $this->getDb()->query($query);
+            $this->getDb()->query($query);
+        }
         return $nid;
     }
 
