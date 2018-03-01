@@ -10,9 +10,14 @@ class Cookie implements \ArrayAccess
 {
 
     /**
+     *  30 days in seconds (86400*30)
+     */
+    const DAYS_30_SEC = 2592000;
+
+    /**
      * @var string
      */
-    protected $path = '';
+    protected $path = '/';
     
     /**
      * @var string
@@ -71,7 +76,7 @@ class Cookie implements \ArrayAccess
      * true or false
      * </p>
      */
-    public function __construct($path = '', $domain = '', $secure = false, $httponly = false)
+    public function __construct($path = '/', $domain = '', $secure = false, $httponly = false)
     {
         $this->path = $path;
         $this->domain = $domain;
@@ -111,7 +116,7 @@ class Cookie implements \ArrayAccess
      * @param float|int $expire Expiry time in seconds (Default: 30 Days)
      * @return $this
      */
-    public function set($key, $value, $expire = (86400*30))
+    public function set($key, $value, $expire = self::DAYS_30_SEC)
     {
         if (!headers_sent()) {
             $expire = $expire + time();
