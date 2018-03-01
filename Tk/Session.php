@@ -168,6 +168,7 @@ class Session implements \ArrayAccess
             $this->setData('session_id', $this->getId());
             $this->setData('user_agent', $this->getRequest()->getUserAgent());
             $this->setData('ip_address', $this->getRequest()->getIp());
+            $this->setData('scheme', $this->getRequest()->getServerParam('REQUEST_SCHEME', 'http'));
             if ($referer) {
                 $this->setData('site_referer', $referer->toString());
                 if (!$this->getData('page_referer') || ($this->getData('page_referer') != $referer)) {
@@ -197,6 +198,10 @@ class Session implements \ArrayAccess
                 switch ($valid) {
                     case 'user_agent' :
                         if ($this->getData($valid) !== $this->getRequest()->getUserAgent())
+                            return $this->start();
+                        break;
+                    case 'scheme' :
+                        if ($this->getData($valid) !== $this->getRequest()->getServerParam('REQUEST_SCHEME', 'http'))
                             return $this->start();
                         break;
                     case 'ip_address' :
