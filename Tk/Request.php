@@ -178,8 +178,9 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * This is a helper function. It escapes data and
      * standardizes newline characters to \n
      *
-     * @param	string|array $str
-     * @return	string
+     * @param    string|array $str
+     * @return    string
+     * @throws Exception
      */
     private function cleanData($str)
     {

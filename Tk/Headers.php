@@ -58,6 +58,7 @@ class Headers extends Collection
      * This method returns the _original_ header name
      * as specified by the end user.
      *
+     * @param null $regex
      * @return array
      */
     public function all($regex = null)

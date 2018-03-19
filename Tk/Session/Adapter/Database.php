@@ -36,13 +36,14 @@ class Database implements Iface
      * @var string
      */
     private $sessionId = null;
-    
+
 
     /**
      * Create a Database session adaptor.
      *
      * @param \Tk\Db\Pdo $db
      * @param \Tk\Encrypt $encrypt
+     * @throws \Tk\Db\Exception
      */
     public function __construct(\Tk\Db\Pdo $db, $encrypt = null)
     {
@@ -96,6 +97,7 @@ SQL;
      *
      * @param string $id
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function read($id)
     {
@@ -120,6 +122,7 @@ SQL;
      * @param string $id
      * @param string $data
      * @return bool
+     * @throws \Tk\Db\Exception
      */
     public function write($id, $data)
     {
@@ -151,6 +154,7 @@ SQL;
      *
      * @param string $id
      * @return bool
+     * @throws \Tk\Db\Exception
      */
     public function destroy($id)
     {
@@ -164,6 +168,7 @@ SQL;
      * regenerate and return new session id
      *
      * @return string
+     * @throws \Tk\Db\Exception
      */
     public function regenerate()
     {
@@ -183,6 +188,7 @@ SQL;
      *
      * @param int $maxlifetime
      * @return bool
+     * @throws \Tk\Db\Exception
      */
     public function gc($maxlifetime)
     {
@@ -196,6 +202,7 @@ SQL;
      * Get all the sessionRecords
      *
      * @return \Tk\Db\PDOStatement
+     * @throws \Tk\Db\Exception
      */
     public function getSessionRecords()
     {
@@ -216,6 +223,7 @@ SQL;
     /**
      * @param \Tk\Db\Pdo $db
      * @return $this
+     * @throws \Tk\Db\Exception
      */
     public function setDb($db)
     {

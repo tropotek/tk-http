@@ -111,10 +111,11 @@ class Session implements \ArrayAccess
      * Get an instance of this object
      *
      * @param null $adapter
+     * @param array $params
      * @param null $request
      * @param null $cookie
-     * @param array $params
      * @return Session
+     * @throws Exception
      */
     public static function getInstance($adapter = null, $params = array(), $request = null, $cookie = null)
     {
