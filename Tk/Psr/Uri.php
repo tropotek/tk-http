@@ -25,8 +25,8 @@ use Psr\Http\Message\UriInterface;
  * 
  * 
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
- * @link http://www.php-fig.org/psr/psr-7/#3-6-psr-http-message-uploadedfileinterface
+ * @see http://www.tropotek.com/
+ * @see http://www.php-fig.org/psr/psr-7/#3-6-psr-http-message-uploadedfileinterface
  * @license Copyright 2007 Michael Mifsud
  */
 class Uri extends \Tk\Uri implements UriInterface

@@ -2,17 +2,17 @@
 namespace Tk;
 
 /**
- * This is a rewritten Tk\Request object with the PSR7 interfaces taken into consideration,
+ * This is a rewritten Request object with the PSR7 interfaces taken into consideration,
  * However you will need to extend these objects to make them completely PSR7 compatible.
  * 
- * The object uses the \ArrayAccess interface so that the request object can be used like the $_REQUEST array
- * in situations that do not have the Tk\Request object.
+ * The object uses the ArrayAccess interface so that the request object can be used like the $_REQUEST array
+ * in situations that do not have the Request object.
  * 
  * 
  * @thought: I am not 100% sure that our libs currently needs to support PSR7 is its entirety.
  *
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
 class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate, \Countable
@@ -108,7 +108,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * @param null|array $params
      * @param null|array $serverParams
      * @param null|array $uploadedFiles
-     * @return Request
+     * @return static
      */
     public static function create($params = null, $serverParams = null, $uploadedFiles = null)
     {
@@ -553,7 +553,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * 
      * note: In general, php://input should be used instead of $HTTP_RAW_POST_DATA.
      * @return string
-     * @link http://php.net/manual/en/reserved.variables.httprawpostdata.php
+     * @see http://php.net/manual/en/reserved.variables.httprawpostdata.php
      */
     public function getRawPostData()
     {

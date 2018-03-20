@@ -24,8 +24,8 @@ namespace Tk;
  * @todo This object methods should all be mutable...
  * 
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
- * @link http://www.php-fig.org/psr/psr-7/#3-5-psr-http-message-uriinterface
+ * @see http://www.tropotek.com/
+ * @see http://www.php-fig.org/psr/psr-7/#3-5-psr-http-message-uriinterface
  * @license Copyright 2007 Michael Mifsud
  */
 class Uri implements \Serializable, \IteratorAggregate
@@ -817,8 +817,8 @@ class Uri implements \Serializable, \IteratorAggregate
      *      by a Cache-Control or Expires header field.
      * </code>
      *
-     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-     * @link http://edoceo.com/creo/php-redirect.php
+     * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+     * @see http://edoceo.com/creo/php-redirect.php
      * @param int $code
      */
     public function redirect($code = 302)
@@ -900,7 +900,7 @@ class Uri implements \Serializable, \IteratorAggregate
 // * Class Url
 // *
 // * @author Michael Mifsud <info@tropotek.com>
-// * @link http://www.tropotek.com/
+// * @see http://www.tropotek.com/
 // * @license Copyright 2016 Michael Mifsud
 // * @deprecated Use \Tk\Uri::create
 // */

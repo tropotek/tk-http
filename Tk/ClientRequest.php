@@ -19,7 +19,7 @@ namespace Tk;
  *
  * 
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
 class ClientRequest extends Message
@@ -109,7 +109,7 @@ class ClientRequest extends Message
      * provided, this method MUST return the string "/".
      *
      * @return string
-     * @link http://tools.ietf.org/html/rfc7230#section-2.7
+     * @see http://tools.ietf.org/html/rfc7230#section-2.7
      */
     public function getRequestTarget()
     {
@@ -129,7 +129,7 @@ class ClientRequest extends Message
      * Retrieves the URI instance.
      * This method MUST return a Uri instance.
      *
-     * @link http://tools.ietf.org/html/rfc3986#section-4.3
+     * @see http://tools.ietf.org/html/rfc3986#section-4.3
      * @return Uri Returns a Uri instance
      *     representing the URI of the request.
      */

@@ -3,7 +3,7 @@ namespace Tk;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
 class Cookie implements \ArrayAccess
@@ -188,7 +188,7 @@ class Cookie implements \ArrayAccess
     /**
      * Whether a offset exists
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @see http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
@@ -206,7 +206,7 @@ class Cookie implements \ArrayAccess
     /**
      * Offset to retrieve
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @see http://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset <p>
      * The offset to retrieve.
      * </p>
@@ -221,7 +221,7 @@ class Cookie implements \ArrayAccess
     /**
      * Offset to set
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @see http://php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset <p>
      * The offset to assign the value to.
      * </p>
@@ -239,7 +239,7 @@ class Cookie implements \ArrayAccess
     /**
      * Offset to unset
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @see http://php.net/manual/en/arrayaccess.offsetunset.php
      * @param mixed $offset <p>
      * The offset to unset.
      * </p>
