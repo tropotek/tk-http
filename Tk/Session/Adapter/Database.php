@@ -58,7 +58,7 @@ class Database implements Iface
      */
     private function install()
     {
-        if ($this->getDb()->tableExists($this->getTable())) return;
+        if ($this->getDb()->hasTable($this->getTable())) return;
         $tbl = $this->getDb()->quoteParameter($this->getTable());
         $sql = <<<SQL
 CREATE TABLE $tbl (

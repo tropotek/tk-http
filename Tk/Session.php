@@ -72,7 +72,6 @@ class Session implements \ArrayAccess
      * @param array|\ArrayAccess $params
      * @param Request $request
      * @param Cookie $cookie
-     * @throws Exception
      */
     public function __construct($adapter = null, $params = array(), $request = null, $cookie = null)
     {
@@ -115,7 +114,6 @@ class Session implements \ArrayAccess
      * @param null $request
      * @param null $cookie
      * @return Session
-     * @throws Exception
      */
     public static function getInstance($adapter = null, $params = array(), $request = null, $cookie = null)
     {
@@ -128,7 +126,6 @@ class Session implements \ArrayAccess
     /**
      * Start this session
      *
-     * @throws Exception
      * @return Session
      */
     public function start()
@@ -151,7 +148,8 @@ class Session implements \ArrayAccess
         // Name the session, this will also be the name of the cookie
         $sesName = $this->getParam('session.name');
         if (!preg_match('~^(?=.*[a-z])[a-z0-9_]++$~iD', $sesName)) {
-            throw new Exception('Invalid Session Name: ' . $sesName);
+            //throw new Exception('Invalid Session Name: ' . $sesName);
+            error_log('Invalid Session Name: ' . $sesName);
         }
         session_name($sesName);
         if ($this->getRequest()->has($sesName) && isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == 'on') {
