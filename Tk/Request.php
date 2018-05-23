@@ -53,7 +53,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     protected $attributes = array();
 
     /**
-     * @var null|array|object
+     * @var null|array|ObjectUtil
      */
     protected $bodyParsed;
 
@@ -446,7 +446,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * potential types MUST be arrays or objects only. A null value indicates
      * the absence of body content.
      *
-     * @return null|array|object The deserialized body parameters, if any.
+     * @return null|array|ObjectUtil The deserialized body parameters, if any.
      *     These will typically be an array or object.
      * @throws \RuntimeException if the request body media type parser returns an invalid value
      */
