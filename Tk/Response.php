@@ -186,11 +186,35 @@ class Response extends Message
         $obj = new static($body, $status, $headers);
         return $obj;
     }
+
+    
+    /**
+     * Sends HTTP headers and content.
+     * tkLib v1 equivalent to flush()
+     *
+     * @return Response
+     */
+    public function send()
+    {
+        $this->sendHeaders();
+        $this->sendContent();
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+//        elseif ('cli' !== PHP_SAPI) {
+//            static::closeOutputBuffers(0, true);
+//        }
+        return $this;
+    }
+
+
     
     /**
      * Sends HTTP headers.
      *
      * @return Response
+     * @todo: should this be a protected method
      */
     public function sendHeaders()
     {
@@ -222,30 +246,11 @@ class Response extends Message
      * Sends content for the current web response.
      *
      * @return Response
+     * @todo: should this be a protected method
      */
     public function sendContent()
     {
         echo $this->getBody();
-        return $this;
-    }
-    
-    /**
-     * Sends HTTP headers and content.
-     * tkLib v1 equivalent to flush()
-     *
-     * @return Response
-     */
-    public function send()
-    {
-        $this->sendHeaders();
-        $this->sendContent();
-        
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        } 
-//        elseif ('cli' !== PHP_SAPI) {
-//            static::closeOutputBuffers(0, true);
-//        }
         return $this;
     }
     
@@ -255,6 +260,7 @@ class Response extends Message
      *
      * @param string $data
      * @return self
+     * @todo: should this be a protected method
      */
     public function write($data)
     {
@@ -262,9 +268,6 @@ class Response extends Message
         return $this;
     }
 
-    
-    
-    
     /**
      * Filter HTTP status code.
      *
@@ -322,9 +325,7 @@ class Response extends Message
         }
         return static::$messages[$this->status];
     }
-    
-    
-    
+
     /**
      * Convert response to string.
      *
