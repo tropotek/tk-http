@@ -60,10 +60,10 @@ class ErrorHandler
      *
      * @see http://au.php.net/manual/en/class.errorException.php
      *
-     * @param $errno
-     * @param $errstr
-     * @param $errfile
-     * @param $errline
+     * @param string $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param string $errline
      * @param array $errcontext
      * @return bool
      * @throws Exception
@@ -94,7 +94,7 @@ class ErrorHandler
             default: $e = new Exception($errstr, $errno);
         }
 
-        if ($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED || $errno == E_RECOVERABLE_ERROR) {
+        if ($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED || $errno == E_RECOVERABLE_ERROR || $errno == E_WARNING || $errno == E_NOTICE) {
             // Log the error only
             if ($this->log) {
                 //$this->log->warning($e->__toString(), $errcontext);
