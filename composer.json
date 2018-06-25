@@ -2,33 +2,30 @@
     "name": "ttek/tk-http",
     "type": "library",
     "description": "HTTP library for the Tk lib",
-    "keywords":  [
-        "tk",
-        "tropotek",
-        "HTTP"
-    ],
-    "time": "2018-06-25",
+    "keywords": ["tk", "tropotek", "HTTP"],
+    "time":  "2016-04-11",
     "license": "MIT",
-    "version": "2.0.18",
-    "authors":  [
-         {
+    "version": "trunk",
+    "authors": [
+        {
             "name": "Michael Mifsud",
             "email": "info@tropotek.com.au",
             "homepage": "http://www.tropotek.com/"
         }
     ],
-    "autoload":  {
-        "psr-0":  {
+    "autoload": {
+        "psr-0": {
             "Tk\\": ""
         }
     },
-    "require":  {
+    
+    "require": {
         "ttek/tk-framework": "~2.0",
         "psr/http-message": "^1.0",
         "psr/cache": "^1.0"
     },
-    "extra":  {
-        "branch-alias":  {
+    "extra": {
+        "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
     }
