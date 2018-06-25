@@ -95,12 +95,14 @@ class ErrorHandler
         }
 
         if ($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED || $errno == E_RECOVERABLE_ERROR || $errno == E_WARNING || $errno == E_NOTICE) {
-            // Log the error only
-            if ($this->log) {
-                //$this->log->warning($e->__toString(), $errcontext);
-                $this->log->warning($e->__toString());
-            } else {
-                error_log($e->__toString()."\n");
+            // Log the error in debug modes
+            if (\Tk\Config::getInstance()->isDebug()) {
+                if ($this->log) {
+                    //$this->log->warning($e->__toString(), $errcontext);
+                    $this->log->warning($e->__toString());
+                } else {
+                    error_log($e->__toString()."\n");
+                }
             }
             return false;
         }
