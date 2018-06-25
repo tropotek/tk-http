@@ -2,6 +2,12 @@
 
 Ver 2.0.22 [2018-06-26]:
 -------------------------------
+Preparing branch master for new release
+Minor Code Updates
+
+
+Ver 2.0.22 [2018-06-26]:
+-------------------------------
 Minor Code Updates
 
 
