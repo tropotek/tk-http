@@ -1,29 +1,21 @@
 #CHANGELOG#
 
+
 Ver 2.0.22 [2018-06-26]:
 -------------------------------
 Preparing branch master for new release
-Minor Code Updates
-
-
-Ver 2.0.22 [2018-06-26]:
--------------------------------
-Minor Code Updates
 
 
 Ver 2.0.20 [2018-06-25]:
 -------------------------------
-Minor Code Updates
 
 
 Ver 2.0.18 [2018-06-25]:
 -------------------------------
-Minor Code Updates
 
 
 Ver 2.0.16 [2018-06-01]:
 -------------------------------
-Minor Code Updates
 Dev.ttek.org
 
 
