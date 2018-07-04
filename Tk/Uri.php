@@ -135,7 +135,8 @@ class Uri implements \Serializable, \IteratorAggregate
             return clone $spec;
         return new static($spec);
     }
-    
+
+
     public function serialize()
     {
         return serialize(array('spec' => $this->spec));
