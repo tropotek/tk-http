@@ -1,5 +1,11 @@
 #CHANGELOG#
 
+Ver 2.0.24 [2018-07-09]:
+-------------------------------
+Minor Code Updates
+Preparing branch master for new release
+
+
 
 Ver 2.0.22 [2018-06-26]:
 -------------------------------
