@@ -157,12 +157,13 @@ class Uri implements \Serializable, \IteratorAggregate
         $spec = $this->spec;
         $host = 'localhost';
 
-
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
             $this->scheme = 'https';
         }
 
-        if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+        if (\Tk\Config::getInstance()->get('site.host')) {
+            $host = \Tk\Config::getInstance()->get('site.host');
+        } else if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
         } else if (isset($_SERVER['HTTP_HOST'])) {
             $host = $_SERVER['HTTP_HOST'];
