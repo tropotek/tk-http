@@ -43,7 +43,6 @@ class Database implements Iface
      *
      * @param \Tk\Db\Pdo $db
      * @param \Tk\Encrypt $encrypt
-     * @throws \Tk\Db\Exception
      */
     public function __construct(\Tk\Db\Pdo $db, $encrypt = null)
     {
@@ -53,14 +52,14 @@ class Database implements Iface
 
     /**
      * This sql should be DB generic (tested on: mysql, pgsql)
-     *
-     * @throws \Tk\Db\Exception
      */
     private function install()
     {
-        if ($this->getDb()->hasTable($this->getTable())) return;
-        $tbl = $this->getDb()->quoteParameter($this->getTable());
-        $sql = <<<SQL
+        try{
+
+            if ($this->getDb()->hasTable($this->getTable())) return;
+            $tbl = $this->getDb()->quoteParameter($this->getTable());
+            $sql = <<<SQL
 CREATE TABLE $tbl (
   session_id VARCHAR(127) NOT NULL PRIMARY KEY,
   data TEXT NOT NULL,
@@ -68,9 +67,16 @@ CREATE TABLE $tbl (
   created TIMESTAMP NOT NULL
 );
 SQL;
-        $this->getDb()->exec($sql);
+            $this->getDb()->exec($sql);
+        } catch (\Exception $e) {
+            \Tk\Log::error($e->__toString());
+        }
     }
 
+    /**
+     * @param $str
+     * @return string
+     */
     protected function encode($str)
     {
         if ($this->encrypt) {
@@ -81,6 +87,10 @@ SQL;
         return $str;
     }
 
+    /**
+     * @param $str
+     * @return bool|string
+     */
     protected function decode($str)
     {
         if ($this->encrypt) {
@@ -223,7 +233,6 @@ SQL;
     /**
      * @param \Tk\Db\Pdo $db
      * @return $this
-     * @throws \Tk\Db\Exception
      */
     public function setDb($db)
     {
@@ -266,7 +275,6 @@ SQL;
 
     /**
      * Use this to put creation in one place.
-     *
      *
      * @param string $time
      * @param null $timezone
