@@ -1,5 +1,9 @@
 #CHANGELOG#
 
+Ver 2.0.34 [2018-08-20]:
+-------------------------------
+
+
 Ver 2.0.32 [2018-08-16]:
 -------------------------------
   - Merge branch 'master' of https://github.com/tropotek/tk-http
