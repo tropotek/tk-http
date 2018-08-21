@@ -260,8 +260,6 @@ class Session implements \ArrayAccess
 
     /**
      * Destroys/deletes the current session.
-     *
-     *
      */
     public function destroy()
     {
@@ -275,6 +273,7 @@ class Session implements \ArrayAccess
             $this->getCookie()->delete($this->getName());
             // Destroy the session
             session_destroy();
+            \Tk\Log::alert('Session Destroyed');
         }
     }
 
