@@ -98,7 +98,7 @@ class Uri implements \Serializable, \IteratorAggregate
             }
         }
         
-        $spec = trim($spec);
+        $spec = trim(urldecode($spec));
         if ($spec && self::$BASE_URL_PATH) {
             $p = parse_url($spec);
             if (!preg_match('/^\/\//', $spec) && !preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
@@ -699,6 +699,7 @@ class Uri implements \Serializable, \IteratorAggregate
     public function getRelativePath()
     {
         $path = $this->getPath();
+        $path = urldecode($path);
         if (preg_match('/^'.  preg_quote(self::$BASE_URL_PATH, '/') . '/', $path)) {
             $path = preg_replace('/^'.preg_quote(self::$BASE_URL_PATH, '/').'/', '', $path);
         }
