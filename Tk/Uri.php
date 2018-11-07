@@ -95,6 +95,9 @@ class Uri implements \Serializable, \IteratorAggregate
             $spec = '/';
             if (isset($_SERVER['REQUEST_URI'])) {
                 $spec = $_SERVER['REQUEST_URI'];
+                if (!empty($_SERVER['QUERY_STRING'])) {
+                    $spec .= '?' . $_SERVER['QUERY_STRING'];
+                }
             }
         }
         
