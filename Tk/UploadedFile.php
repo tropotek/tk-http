@@ -3,8 +3,6 @@ namespace Tk;
 
 
 /**
- * Class UploadedFile
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
