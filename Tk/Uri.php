@@ -739,7 +739,7 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function toString($showHost = true, $showScheme = true)
     {
-        if (preg_match('/^(#|javascript|mailto)/i', $this->spec)) {
+        if (preg_match('/^(#|javascript|mailto|data)/i', $this->spec)) {
             return $this->spec;
         }
         $uri = '';
