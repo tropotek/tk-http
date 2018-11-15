@@ -91,6 +91,7 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function __construct($spec = null)
     {
+        $this->spec = $spec;
         if ($spec === null) {   // Create an auto request uri.
             $spec = '/';
             if (isset($_SERVER['REQUEST_URI'])) {
@@ -100,26 +101,24 @@ class Uri implements \Serializable, \IteratorAggregate
                 }
             }
         }
-        
-        $spec = trim(urldecode($spec));
-        if ($spec && self::$BASE_URL_PATH) {
-            $p = parse_url($spec);
-            if (!preg_match('/^\/\//', $spec) && !preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
-                if (self::$BASE_URL_PATH) {
-                    if (preg_match('/^'.  preg_quote(self::$BASE_URL_PATH, '/') . '/', $spec)) {
-                        $spec = preg_replace('/^'.preg_quote(self::$BASE_URL_PATH, '/').'/', '', $spec);
+        if ($this->isUrl()) {
+            $spec = trim(urldecode($spec));
+            if ($spec && self::$BASE_URL_PATH) {
+                $p = parse_url($spec);
+                if (!preg_match('/^\/\//', $spec) && !preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
+                    if (self::$BASE_URL_PATH) {
+                        if (preg_match('/^' . preg_quote(self::$BASE_URL_PATH, '/') . '/', $spec)) {
+                            $spec = preg_replace('/^' . preg_quote(self::$BASE_URL_PATH, '/') . '/', '', $spec);
+                        }
+                        //$spec = str_replace(self::$BASE_URL_PATH, '', $spec);
+                        $spec = trim($spec, '/');
+                        $spec = self::$BASE_URL_PATH . '/' . $spec;
                     }
-                    //$spec = str_replace(self::$BASE_URL_PATH, '', $spec);
-                    $spec = trim($spec, '/');
-                    $spec = self::$BASE_URL_PATH . '/' . $spec;
                 }
             }
         }
-        
         $this->spec = $spec;
-        if (!preg_match('/^(#|javascript|mailto|data):/i', $this->spec)) {
-            $this->init();
-        }
+        $this->init();
     }
 
     /**
@@ -159,6 +158,10 @@ class Uri implements \Serializable, \IteratorAggregate
     {
         $spec = $this->spec;
         $host = 'localhost';
+
+        if (!$this->isUrl()) {
+            return;
+        }
 
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
             $this->scheme = 'https';
@@ -222,6 +225,15 @@ class Uri implements \Serializable, \IteratorAggregate
         }
     }
 
+    /**
+     * returns true if the uri is a link/URL and not a data/script type uri
+     *
+     * @return bool
+     */
+    public function isUrl()
+    {
+        return !preg_match('/^(#|javascript|mailto|data):/i', $this->spec);
+    }
 
     /**
      * Compare 2 uris by path if $queryString is false
@@ -274,10 +286,13 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function getExtension()
     {
-        if (substr($this->getPath(), -6) == 'tar.gz') {
-            return 'tar.gz';
+        if ($this->isUrl()) {
+            if (substr($this->getPath(), -6) == 'tar.gz') {
+                return 'tar.gz';
+            }
+            return pathinfo($this->getPath(), PATHINFO_EXTENSION);
         }
-        return pathinfo($this->getPath(), PATHINFO_EXTENSION);
+        return '';
     }
 
     /**
@@ -309,8 +324,10 @@ class Uri implements \Serializable, \IteratorAggregate
     public function dirname()
     {
         $url = clone $this;
-        $url->spec = dirname($url->getPath());
-        $url->setPath(dirname($url->getPath()));
+        if ($this->isUrl()) {
+            $url->spec = dirname($url->getPath());
+            $url->setPath(dirname($url->getPath()));
+        }
         return $url;
     }
 
@@ -739,7 +756,7 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function toString($showHost = true, $showScheme = true)
     {
-        if (preg_match('/^(#|javascript|mailto|data)/i', $this->spec)) {
+        if (!$this->isUrl()) {
             return $this->spec;
         }
         $uri = '';
@@ -829,11 +846,11 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function redirect($code = 302)
     {
+        if (!$this->isUrl()) return;
         if (headers_sent()) {
             \Tk\Log::error('Invalid URL Redirect, Headers Already Sent.');
             exit();
         }
-
         switch ($code) {
             case 301:
                 // Convert to GET
