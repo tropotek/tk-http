@@ -105,7 +105,8 @@ class Uri implements \Serializable, \IteratorAggregate
             $spec = trim(urldecode($spec));
             if ($spec && self::$BASE_URL_PATH) {
                 $p = parse_url($spec);
-                if (!preg_match('/^\/\//', $spec) && !preg_match('/^(#|javascript|mailto)/i', $spec) && !isset($p['scheme'])) {
+                //if (!preg_match('/^\/\//', $spec) && !preg_match('/^(#|javascript|mailto|data)/i', $spec) && !isset($p['scheme'])) {
+                if (!preg_match('/^\/\//', $spec) && !isset($p['scheme'])) {
                     if (self::$BASE_URL_PATH) {
                         if (preg_match('/^' . preg_quote(self::$BASE_URL_PATH, '/') . '/', $spec)) {
                             $spec = preg_replace('/^' . preg_quote(self::$BASE_URL_PATH, '/') . '/', '', $spec);
@@ -232,7 +233,7 @@ class Uri implements \Serializable, \IteratorAggregate
      */
     public function isUrl()
     {
-        return !preg_match('/^(#|javascript|mailto|data):/i', $this->spec);
+        return !preg_match('/^(#|javascript|mailto|data)/i', $this->spec);
     }
 
     /**
