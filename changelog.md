@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.50 [2018-11-16]:
+-------------------------------
+  - Fixed ssubject Enrollment page
+  - Added avg to categories on studentReport page
+  - Added company excusion to Entry Report
+
+
 Ver 2.0.48 [2018-11-15]:
 -------------------------------
   - Added Student Lookup for staff accounts
