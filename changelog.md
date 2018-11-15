@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.48 [2018-11-15]:
+-------------------------------
+  - Added Student Lookup for staff accounts
+
+
 Ver 2.0.46 [2018-11-15]:
 -------------------------------
   - Fixed individual entry percent grade
