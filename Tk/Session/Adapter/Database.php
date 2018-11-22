@@ -138,20 +138,31 @@ SQL;
     {
         $data = $this->encode($data);
         if ($this->sessionId === null) {
+
+            // TODO: Alana seems to generate an error here where the session_id is null and tries to re-insert the session.
+            // TODO:
+            // TODO: I am unsure how this is occuring. Something to keep an eye on.
+            // TODO:
+            // TODO:
+            // TODO:
+
             // Insert a new session
             $query = sprintf('INSERT INTO %s VALUES (%s, %s, %s, %s)', 
-                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($data), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)));
+                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($data),
+                $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)) );
             $this->getDb()->query($query);
-        } elseif ($id === $this->sessionId) {
+        } else if ($id === $this->sessionId) {
             // Update the existing session
             $query = sprintf("UPDATE %s SET modified = %s, data = %s WHERE session_id = %s", 
-                $this->getTable(), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)), $this->getDb()->quote($data), $this->getDb()->quote($id));
+                $this->getTable(), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getDb()->quote($data), $this->getDb()->quote($id));
             $this->getDb()->query($query);
         } else {
             // Update the session and id
             $query = sprintf("UPDATE %s SET session_id = %s, modified = %s, data = %s WHERE session_id = %s", 
                 $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
-                $this->getDb()->quote($data), $this->getDb()->quote($this->sessionId));
+                $this->getDb()->quote($data), $this->getDb()->quote($this->sessionId) );
             $this->getDb()->query($query);
             // Set the new session id
             $this->sessionId = $id;
