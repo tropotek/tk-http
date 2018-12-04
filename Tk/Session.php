@@ -414,7 +414,7 @@ class Session implements \ArrayAccess
      *
      * @param string $key A key to retrieve the data
      * @param mixed $value
-     * @return $this
+     * @return Session
      */
     public function set($key, $value = null)
     {
