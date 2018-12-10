@@ -79,7 +79,7 @@ class Response extends Message
      *
      * @var array
      */
-    protected static $messages = [
+    public static $messages = [
         //Informational 1xx
         100 => 'Continue',
         101 => 'Switching Protocols',
