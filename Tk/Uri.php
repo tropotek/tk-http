@@ -83,7 +83,6 @@ class Uri implements \Serializable, \IteratorAggregate
 
 
 
-
     /**
      * Paths that do not start with a scheme section to the uri are prepended with the  self::$BASE_URL . '/' string
      *
