@@ -116,9 +116,10 @@ SQL;
         $result = $this->getDb()->query($query);
         $row = $result->fetchObject();
         if (!$row) {  // No current session
-            $this->sessionId = null;
+            //$this->sessionId = null;
             return '';
         }
+
         // Set the current session id
         $this->sessionId = $id;
         // Load the data
@@ -137,31 +138,32 @@ SQL;
     public function write($id, $data)
     {
         $data = $this->encode($data);
-        if ($this->sessionId === null) {
+        if ($this->sessionId === null && !$this->read($id)) {
 
             // TODO: Alana seems to generate an error here where the session_id is null and tries to re-insert the session.
             // TODO:
-            // TODO: I am unsure how this is occuring. Something to keep an eye on.
+            // TODO: I am unsure how this is occurring. Something to keep an eye on.
             // TODO:
-            // TODO:
+            // TODO:  NOTE: I have slightly changed the code and how the $id is handled, lets see what that does. (see read() )
             // TODO:
 
             // Insert a new session
             $query = sprintf('INSERT INTO %s VALUES (%s, %s, %s, %s)', 
                 $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($data),
-                $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
-                $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)) );
+                $this->getDb()->quote($this->createDate()->format(\Tk\Date::FORMAT_ISO_DATE)),
+                $this->getDb()->quote($this->createDate()->format(\Tk\Date::FORMAT_ISO_DATE)) );
+
             $this->getDb()->query($query);
         } else if ($id === $this->sessionId) {
             // Update the existing session
             $query = sprintf("UPDATE %s SET modified = %s, data = %s WHERE session_id = %s", 
-                $this->getTable(), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getTable(), $this->getDb()->quote($this->createDate()->format(\Tk\Date::FORMAT_ISO_DATE)),
                 $this->getDb()->quote($data), $this->getDb()->quote($id));
             $this->getDb()->query($query);
         } else {
             // Update the session and id
             $query = sprintf("UPDATE %s SET session_id = %s, modified = %s, data = %s WHERE session_id = %s", 
-                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getTable(), $this->getDb()->quote($id), $this->getDb()->quote($this->createDate()->format(\Tk\Date::FORMAT_ISO_DATE)),
                 $this->getDb()->quote($data), $this->getDb()->quote($this->sessionId) );
             $this->getDb()->query($query);
             // Set the new session id
@@ -197,7 +199,7 @@ SQL;
         if (session_regenerate_id()) {
             $nid = session_id();
             $query = sprintf("UPDATE %s SET session_id = %s, modified = %s WHERE id = %s",
-                $this->getTable(), $this->getDb()->quote($nid), $this->getDb()->quote($this->createDate()->format(\Tk\Date::ISO_DATE)),
+                $this->getTable(), $this->getDb()->quote($nid), $this->getDb()->quote($this->createDate()->format(\Tk\Date::FORMAT_ISO_DATE)),
                 $this->getDb()->quote($oid));
             $this->getDb()->query($query);
         }
@@ -214,7 +216,7 @@ SQL;
     public function gc($maxlifetime)
     {
         // Delete all expired sessions
-        $query = sprintf('DELETE FROM %s WHERE modified < %s', $this->getTable(), $this->getDb()->quote($this->createDate(time() - $maxlifetime)->format(\Tk\Date::ISO_DATE)));
+        $query = sprintf('DELETE FROM %s WHERE modified < %s', $this->getTable(), $this->getDb()->quote($this->createDate(time() - $maxlifetime)->format(\Tk\Date::FORMAT_ISO_DATE)));
         $this->getDb()->query($query);
         return true;
     }
