@@ -28,6 +28,7 @@ use Psr\Http\Message\UriInterface;
  * @see http://www.tropotek.com/
  * @see http://www.php-fig.org/psr/psr-7/#3-6-psr-http-message-uploadedfileinterface
  * @license Copyright 2007 Michael Mifsud
+ * @deprecated Do We event use this anywhere? Should it be inside the \Tk\Uri itself....
  */
 class Uri extends \Tk\Uri implements UriInterface
 {    
