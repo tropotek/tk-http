@@ -23,7 +23,7 @@
         }
     },
     "require":  {
-        "ttek/tk-framework": "~2.0",
+        "ttek/tk-framework": "~3.0",
         "psr/http-message": "^1.0",
         "psr/cache": "^1.0"
     },
