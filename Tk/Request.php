@@ -1,6 +1,9 @@
 <?php
 namespace Tk;
 
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * This is a rewritten Request object with the PSR7 interfaces taken into consideration,
  * However you will need to extend these objects to make them completely PSR7 compatible.
@@ -15,219 +18,53 @@ namespace Tk;
  * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate, \Countable
+class Request extends \Symfony\Component\HttpFoundation\Request
 {
-    
-    /**
-     * Set this if you want to extend the Request's sanitizer method
-     * This will be called after the existing sanitizer method is run.
-     * The callback will supply the request as a single argument passed to the callback.
-     * 
-     * @var callable
-     */
-    public static $sanitizerCallback = null;
-
-    /**
-     * @var array
-     */
-    protected $cookies = array();
-
-    /**
-     * @var array
-     */
-    protected $params = array();
-    
-    /**
-     * @var array
-     */
-    protected $serverParams = array();
-
-    /**
-     * @var array
-     */
-    protected $uploadedFiles = array();
-
-    /**
-     * @var array
-     */
-    protected $attributes = array();
-
-    /**
-     * @var null|array|ObjectUtil
-     */
-    protected $bodyParsed;
-
-    /**
-     * @var callable[]
-     */
-    protected $bodyParsers = array();
 
 
-    /**
-     * Request constructor.
-     *
-     * @param Uri $uri The Request Uri
-     * @param string $method The request method ('GET', 'POST', etc)
-     * @param array $headers An array of the request headers
-     * @param array $params The request params ($_REQUEST) This contains all $_GET, $_POST, $_COOKIES.
-     * @param array $serverParams The server/Environment array variables ($_SERVER, $_ENV)
-     * @param array $cookies Generally this is the $_COOKIES global
-     * @param array $uploadedFiles Generally this is the $_FILES global
-     * @param mixed|string $body The body of the request if available
-     */
-    public function __construct($uri, $method = 'GET', $headers = array(), $params = array(), $serverParams = array(), $cookies = array(), $uploadedFiles = array(), $body = '')
-    {
-        parent::__construct($uri, $method, $body);
-        $this->headers = Headers::create($headers);
-        $this->params = $params;
-        $this->serverParams = $serverParams;
-        $this->cookies = $cookies;
-        $this->uploadedFiles = $uploadedFiles;
-        
-        $this->sanitize($this->params);
-        $this->sanitize($this->serverParams);
-        
-        $this->registerMediaTypeParser('application/json', function ($input) {
-            return json_decode($input, true);
-        });
+//    public static function create($params = null, $serverParams = null, $uploadedFiles = null)
+//    {
+//        $uri = Uri::create();
+//        $method = 'GET';
+//        if (isset($_SERVER['REQUEST_METHOD'])) {
+//            $method = $_SERVER['REQUEST_METHOD'];
+//        }
+//
+//        $headers = Headers::create();
+//
+//        if ($params === null) {
+//            $params = $_REQUEST;
+//        }
+//
+//        if ($serverParams === null) {
+//            $serverParams = $_SERVER;
+//        }
+//
+//        $cookies = $_COOKIE;
+//
+//        if ($uploadedFiles === null) {
+//            $uploadedFiles = array();
+//            if (!empty($_FILES)) {
+//                $uploadedFiles = UploadedFile::parseUploadedFiles($_FILES);
+//            }
+//        }
+//
+//        $request = new static($uri, $method, $headers, $params, $serverParams, $cookies, $uploadedFiles);
+//        return $request;
+//    }
 
-        $this->registerMediaTypeParser('application/xml', function ($input) {
-            return simplexml_load_string($input);
-        });
 
-        $this->registerMediaTypeParser('application/x-www-form-urlencoded', function ($input) {
-            parse_str($input, $data);
-            return $data;
-        });
-        
-    }
-
-    /**
-     * Create a default instance from the server environment variables.
-     * 
-     * @param null|array $params
-     * @param null|array $serverParams
-     * @param null|array $uploadedFiles
-     * @return static
-     */
-    public static function create($params = null, $serverParams = null, $uploadedFiles = null)
-    {
-        $uri = Uri::create();
-        $method = 'GET';
-        if (isset($_SERVER['REQUEST_METHOD'])) {
-            $method = $_SERVER['REQUEST_METHOD'];
-        }
-        
-        $headers = Headers::create();
-        
-        if ($params === null) {
-            $params = $_REQUEST;
-        }
-
-        if ($serverParams === null) {
-            $serverParams = $_SERVER;
-        }
-        
-        $cookies = $_COOKIE;
-        
-        if ($uploadedFiles === null) {
-            $uploadedFiles = array();
-            if (!empty($_FILES)) {
-                $uploadedFiles = UploadedFile::parseUploadedFiles($_FILES);
-            }
-        }
-        
-        $request = new static($uri, $method, $headers, $params, $serverParams, $cookies, $uploadedFiles);        
-        return $request;
-    }
-
-    /**
-     * Sanitize Globals
-     *
-     * This function does the following:
-     *
-     * Unsets $_GET data (if query strings are not enabled)
-     *
-     * Unsets all globals if register_globals is enabled
-     *
-     * Standardizes newline characters to \n
-     *
-     * @access    private
-     * @param $array
-     */
-    private function sanitize($array)
-    {
-        try {   // Need a catch statement here as it could be run outside a try catch.
-            // Clean $_REQUEST data
-            if (is_array($array) && count($array) > 0) {
-                foreach ($array as $key => $val) {
-                    $array[$this->cleanKey($key)] = $this->cleanData($val);
-                }
-            }
-            if (is_callable(static::$sanitizerCallback)) {
-                call_user_func_array(static::$sanitizerCallback, array($this));
-            } 
-        } catch (\Exception $e) {
-            error_log(print_r($e->__toString(), true));
-        }
-    }
-
-    /**
-     * Clean Input Data
-     *
-     * This is a helper function. It escapes data and
-     * standardizes newline characters to \n
-     *
-     * @param    string|array $str
-     * @return    string|array
-     * @throws Exception
-     */
-    private function cleanData($str)
-    {
-        if (is_array($str)) {
-            $new_array = array();
-            foreach ($str as $key => $val) {
-                $new_array[$this->cleanKey($key)] = $this->cleanData($val);
-            }
-            return $new_array;
-        }
-        // Standardize newlines
-        return preg_replace("/\015\012|\015|\012/", "\n", $str);
-    }
-
-    /**
-     * Clean Keys
-     *
-     * This is a helper function. To prevent malicious users
-     * from trying to exploit keys we make sure that keys are
-     * only named with alpha-numeric text and a few other items.
-     *
-     * @param	string $str
-     * @return	string
-     * @throws \Tk\Exception
-     */
-    private function cleanKey($str)
-    {
-        if (!preg_match("/^[a-z0-9:_\[\]\/-]+$/i", $str)) {
-            throw new Exception('Disallowed Key Characters.');
-        }
-        return $str;
-    }
-
-    // --------------------------------------------------------------------
-    
-    /**
-     * Get a request param
-     * 
-     * @param $key
-     * @param null $default
-     * @return mixed
-     */
     public function get($key, $default = null)
     {
-        if ($this->has($key))
-            return $this->params[$key];
-        return $default;
+        parent::get($key, $default);
+    }
+
+    /**
+     * @return Uri
+     */
+    public function getTkUri()
+    {
+        return Uri::create($this->getUri());
     }
 
     /**
@@ -237,7 +74,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function all()
     {
-        return $this->params;
+        return $this->request->all();
     }
 
     /**
@@ -248,7 +85,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function has($key)
     {
-        return isset($this->params[$key]);
+        return $this->request->has($key);
     }
     
 
@@ -264,10 +101,10 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getCookieParams()
     {
-        return $this->cookies;
+        return $this->cookies->all();
     }
-    
-    
+
+
     /**
      * Retrieve query string arguments.
      *
@@ -282,10 +119,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getQueryParams()
     {
-        if ($this->getUri() === null) {
-            return [];
-        }
-        return $this->getUri()->getQueryArray();
+        return $this->query->all();
     }
     
     /**
@@ -297,23 +131,22 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      * These values MAY be prepared from $_FILES or the message body during
      * instantiation, or MAY be injected via withUploadedFiles().
      *
-     * @return array An array tree of UploadedFileInterface instances; an empty
+     * @return array|UploadedFile[] An array tree of UploadedFileInterface instances; an empty
      *     array MUST be returned if no data is present.
      */
     public function getUploadedFiles()
     {
-        return $this->uploadedFiles;
+        return $this->files->all();
     }
 
     /**
      *
      * @param $name
-     * @return UploadedFile|array|null
+     * @return UploadedFile|mixed|null
      */
     public function getUploadedFile($name)
     {
-        if (isset($this->uploadedFiles[$name]))
-            return $this->uploadedFiles[$name];
+        $this->files->get($name);
     }
     
     
@@ -328,21 +161,17 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getServerParams()
     {
-        return $this->serverParams;
+        return $this->server->all();
     }
 
     /**
-     * 
-     * 
      * @param $name
      * @param null $default
      * @return null
      */
     public function getServerParam($name, $default = null)
     {
-        if (isset($this->serverParams[$name]))
-            return $this->serverParams[$name];
-        return $default;
+        return $this->server->get($name, $default);
     }
     
     /**
@@ -358,7 +187,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getAttributes()
     {
-        return $this->attributes;
+        return $this->attributes->all();
     }
 
     /**
@@ -378,10 +207,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getAttribute($name, $default = null)
     {
-        if ($this->hasAttribute($name)) {
-            return $this->attributes[$name];
-        }
-        return $default;
+        return $this->attributes->get($name, $default);
     }
 
     /**
@@ -393,7 +219,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function setAttribute($name, $value) 
     {
-        $this->attributes[$name] = $value;
+        $this->attributes->set($name, $value);
         return $this;
     }
 
@@ -405,8 +231,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function removeAttribute($name)
     {
-        if ($this->hasAttribute($name))
-            unset($this->attributes[$name]);
+        $this->attributes->remove($name);
         return $this;
     }
 
@@ -418,80 +243,21 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function hasAttribute($name)
     {
-        return isset($this->attributes[$name]);
+        return $this->attributes->has($name);
     }
 
     /**
      * Add a list of items to the attribute array
      *
      * @param array $items Key-value array of data to append to this collection
+     * @return Request
      */
     public function replaceAttribute(array $items)
     {
-        foreach ($items as $key => $value) {
-            $this->setAttribute($key, $value);
-        }
-    }
-    
-    
-    /**
-     * Retrieve any parameters provided in the request body.
-     *
-     * If the request Content-Type is either application/x-www-form-urlencoded
-     * or multipart/form-data, and the request method is POST, this method MUST
-     * return the contents of $_POST.
-     *
-     * Otherwise, this method may return any results of deserializing
-     * the request body content; as parsing returns structured content, the
-     * potential types MUST be arrays or objects only. A null value indicates
-     * the absence of body content.
-     *
-     * @return null|array|ObjectUtil The deserialized body parameters, if any.
-     *     These will typically be an array or object.
-     * @throws \RuntimeException if the request body media type parser returns an invalid value
-     */
-    public function getParsedBody()
-    {
-        if ($this->bodyParsed) {
-            return $this->bodyParsed;
-        }
-
-        if (!$this->body) {
-            return null;
-        }
-
-        $mediaType = $this->getMediaType();
-        $body = (string)$this->getBody();
-
-        if (isset($this->bodyParsers[$mediaType]) === true) {
-            $parsed = $this->bodyParsers[$mediaType]($body);
-            if (!is_null($parsed) && !is_object($parsed) && !is_array($parsed)) {
-                throw new \RuntimeException('Request body media type parser return value must be an array, an object, or null');
-            }
-            $this->bodyParsed = $parsed;
-        }
-
-        return $this->bodyParsed;
+        $this->attributes->replace($items);
+        return $this;
     }
 
-    /**
-     * Register media type parser.
-     *
-     * Note: This method is not part of the PSR-7 standard.
-     *
-     * @param string   $mediaType A HTTP media type (excluding content-type
-     *     params).
-     * @param callable $callable  A callable that returns parsed contents for
-     *     media type.
-     */
-    public function registerMediaTypeParser($mediaType, callable $callable)
-    {
-        if ($callable instanceof \Closure) {
-            $callable = $callable->bindTo($this);
-        }
-        $this->bodyParsers[(string)$mediaType] = $callable;
-    }
-    
     
     /**
      * Get the client IP address.
@@ -500,10 +266,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getIp()
     {
-        if ($this->hasHeader('X-Forwarded-For')) {
-            return trim(current(explode(',', $this->getHeaderLine('X-Forwarded-For'))));
-        }
-        return $this->getServerParam('REMOTE_ADDR', null);
+        return $this->getClientIp();
     }
 
 
@@ -529,8 +292,8 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function checkReferer()
     {
-        $referer = $this->getReferer();
-        $request = $this->getUri();
+        $referer = \Tk\Uri::create($this->getReferer());
+        $request = \Tk\Uri::create($this->getUri());
         if ($referer && $referer->getHost() == $request->getHost()) {
             return true;
         }
@@ -561,66 +324,8 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
     }
 
 
-    /**
-     * Does this collection have a given key?
-     *
-     * @param  string $key The data key
-     *
-     * @return bool
-     */
-    public function offsetExists($key)
-    {
-        return $this->has($key);
-    }
 
-    /**
-     * Get collection item for key
-     *
-     * @param string $key The data key
-     *
-     * @return mixed The key's value, or the default value
-     */
-    public function offsetGet($key)
-    {
-        return $this->get($key);
-    }
 
-    /**
-     * Set collection item
-     *
-     * @param string $key The data key
-     * @param mixed $value The data value
-     * @throws Exception
-     * @todo This should not be allowed technically
-     */
-    public function offsetSet($key, $value)
-    {
-        throw new Exception('Data is read only, use attributes array.');
-        //$this->params[$key] = $value;
-    }
-
-    /**
-     * Remove item from collection
-     *
-     * @param string $key The data key
-     * @throws Exception
-     * @todo This should not be allowed technically
-     */
-    public function offsetUnset($key)
-    {
-        throw new Exception('Data is read only, use attributes array.');
-        //unset($this->params[$key]);
-    }
-
-    /**
-     * Get number of items in collection
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->params);
-    }
 
     /**
      * Get collection iterator
@@ -629,7 +334,7 @@ class Request extends ClientRequest implements \ArrayAccess, \IteratorAggregate,
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->params);
+        return new \ArrayIterator($this->request);
     }
     
 }
